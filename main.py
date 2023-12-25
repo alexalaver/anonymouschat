@@ -9,7 +9,7 @@ import logging
 
 bot = Bot(token=cfg.BOT_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
-db = Data("localhost", "5432", "anonymouschat", "anonym_user", "anonympass")
+db = Data("localhost", "5432", "anonymouschat", "parser_user", "parser_pwd")
 logging.basicConfig(level=logging.INFO)
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
