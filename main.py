@@ -21,6 +21,7 @@ class Register(StatesGroup):
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
+        await message.delete()
         user_id = message.from_user.id
         if(not db.check_user(user_id)):
             markup = buttons.RegisterGender(types)
@@ -44,6 +45,7 @@ async def reg_1_callback(callback_query: types.CallbackQuery, state: FSMContext)
 
 @dp.message_handler(state=Register.reg_1)
 async def reg_1_text(message: types.Message):
+    await message.delete()
     markup = buttons.RegisterGender(types)
     await message.answer(cfg.select_gender_1_text, reply_markup=markup)
 
@@ -73,6 +75,7 @@ async def reg_2_callback(callback_query: types.CallbackQuery, state: FSMContext)
 
 @dp.message_handler(state=Register.reg_2)
 async def reg_2_text(message: types.Message):
+    await message.delete()
     markup = buttons.RegisterAge(types)
     await message.answer(cfg.select_gender_2_text, reply_markup=markup)
 
