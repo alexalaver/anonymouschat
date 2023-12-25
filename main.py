@@ -76,5 +76,14 @@ async def reg_2_text(message: types.Message):
     markup = buttons.RegisterAge(types)
     await message.answer(cfg.select_gender_2_text, reply_markup=markup)
 
+@dp.callback_query_handler()
+async def all_callback(callback_query: types.CallbackQuery):
+    if callback_query.message.chat.type == types.ChatType.PRIVATE:
+        if callback_query.data == "test":
+            pass
+        else:
+            await callback_query.message.delete()
+            await callback_query.answer(cfg.cannot_use_button, show_alert=True)
+
 if __name__ == "__main__":
     executor.start_polling(dp)
