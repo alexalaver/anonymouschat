@@ -23,3 +23,4 @@ def RegisterAge(types):
         types.InlineKeyboardButton(text=cfg.age_30_49, callback_data="age_30_49"),
         types.InlineKeyboardButton(text=cfg.age_50_90, callback_data="age_50_90")
     )
+    return markup
