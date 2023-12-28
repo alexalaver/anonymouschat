@@ -20,7 +20,7 @@ class Register(StatesGroup):
 
 
 #function_search_all
-async def search_all_button(message: types.Message):
+async def search_all_button(message):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
         if(not db.check_user(user_id)):
@@ -46,9 +46,6 @@ async def search_all_button(message: types.Message):
                         db.create_chat_all(id_chats, user_id, user_second)
                         await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=None)
                         await message.answer(cfg.companion_right_text, reply_markup=None)
-
-
-
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
@@ -119,6 +116,12 @@ async def all_callback(callback_query: types.CallbackQuery):
         else:
             await callback_query.message.delete()
             await callback_query.answer(cfg.cannot_use_button, show_alert=True)
+
+@dp.message_handler()
+async def text_all(message: types.Message):
+    if message.chat.type == types.ChatType.PRIVATE:
+        if message.text == cfg.search_all_button or message.text == "/search":
+            await search_all_button(message)
 
 if __name__ == "__main__":
     executor.start_polling(dp)
