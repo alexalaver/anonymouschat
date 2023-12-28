@@ -61,7 +61,7 @@ class Data:
 
     def get_user_queue(self):
         with self.connect:
-            self.cursor.execute("SELECT user_id, gender FROM queue")
+            self.cursor.execute("SELECT user_id FROM queue")
             user = self.cursor.fetchone()
             if user is not None and bool(len(user)):
                 return user[0]
