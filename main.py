@@ -45,8 +45,8 @@ async def search_all_button(message):
                         id_chats = db.check_numbers_id_chat()
                         id_chats += 1
                         db.create_chat_all(id_chats, user_id, user_second)
-                        await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=None)
-                        await message.answer(cfg.companion_right_text, reply_markup=None)
+                        await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove())
+                        await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove)
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
