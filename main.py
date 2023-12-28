@@ -9,7 +9,7 @@ import logging
 
 bot = Bot(token=cfg.BOT_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
-db = Data("localhost", "5432", "anonymouschat", "parser_user", "parser_pwd")
+db = Data("localhost", "5432", "anonymouschat", "alex", "alexpass")
 logging.basicConfig(level=logging.INFO)
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -17,6 +17,38 @@ logger = logging.getLogger(__name__)
 class Register(StatesGroup):
     reg_1 = State()
     reg_2 = State()
+
+
+#function_search_all
+async def search_all_button(message: types.Message):
+    if message.chat.type == types.ChatType.PRIVATE:
+        user_id = message.from_user.id
+        if(not db.check_user(user_id)):
+            markup = buttons.RegisterGender(types)
+            await message.answer(cfg.select_gender_1_text, reply_markup=markup)
+            await Register.reg_1.set()
+        else:
+            if db.check_queue(user_id):
+                await message.answer(cfg.search_two_text)
+            else:
+                if db.get_active_chat(user_id):
+                    await message.answer(cfg.have_companion_error)
+                else:
+                    user_second = db.get_user_queue()
+                    cancel_button = buttons.CancelButton(types)
+                    if user_second == False:
+                        id_queue = db.check_numbers_id_queue()
+                        db.add_queue_all(id_queue, user_id)
+                        await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
+                    else:
+                        db.delete_queue(user_second)
+                        id_chats = db.check_numbers_id_chat()
+                        db.create_chat_all(id_chats, user_id, user_second)
+                        await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=None)
+                        await message.answer(cfg.companion_right_text, reply_markup=None)
+
+
+
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message):

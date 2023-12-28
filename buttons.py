@@ -24,3 +24,10 @@ def RegisterAge(types):
         types.InlineKeyboardButton(text=cfg.age_50_90, callback_data="age_50_90")
     )
     return markup
+
+def CancelButton(types):
+    markup = types.ReplyKeyboardMarkup(row_width=1)
+    markup.add(
+        cfg.cancel_button
+    )
+    return markup
