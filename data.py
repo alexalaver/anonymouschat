@@ -68,7 +68,7 @@ class Data:
         with self.connect:
             if user_first != 0:
                 self.cursor.execute("DELETE FROM queue WHERE user_id=%s", (user_second,))
-                self.cursor.execute("INSERT INTO chats(id, user_first, user_second) VALUES(%s, %s)", (id, user_first, user_second,))
+                self.cursor.execute("INSERT INTO chats(id, user_first, user_second) VALUES(%s, %s, %s)", (id, user_first, user_second,))
                 self.connect.commit()
                 return True
             else:
