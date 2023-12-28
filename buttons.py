@@ -26,7 +26,7 @@ def RegisterAge(types):
     return markup
 
 def CancelButton(types):
-    markup = types.ReplyKeyboardMarkup(row_width=1)
+    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     markup.add(
         cfg.cancel_button
     )

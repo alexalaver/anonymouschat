@@ -38,11 +38,12 @@ async def search_all_button(message):
                     cancel_button = buttons.CancelButton(types)
                     if user_second == False:
                         id_queue = db.check_numbers_id_queue()
+                        id_queue += 1
                         db.add_queue_all(id_queue, user_id)
                         await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
                     else:
-                        db.delete_queue(user_second)
                         id_chats = db.check_numbers_id_chat()
+                        id_chats += 1
                         db.create_chat_all(id_chats, user_id, user_second)
                         await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=None)
                         await message.answer(cfg.companion_right_text, reply_markup=None)
@@ -52,13 +53,19 @@ async def start(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         await message.delete()
         user_id = message.from_user.id
-        if(not db.check_user(user_id)):
-            markup = buttons.RegisterGender(types)
-            await message.answer(cfg.select_gender_1_text, reply_markup=markup)
-            await Register.reg_1.set()
+        if db.check_queue(user_id):
+            await message.answer(cfg.queue_error_commands)
         else:
-            markup = buttons.menu_buttons(types)
-            await message.answer("TEST", reply_markup=markup)
+            if db.get_active_chat(user_id):
+                await message.answer(cfg.chats_error_commands)
+            else:
+                if(not db.check_user(user_id)):
+                    markup = buttons.RegisterGender(types)
+                    await message.answer(cfg.select_gender_1_text, reply_markup=markup)
+                    await Register.reg_1.set()
+                else:
+                    markup = buttons.menu_buttons(types)
+                    await message.answer("TEST", reply_markup=markup)
 
 @dp.callback_query_handler(state=Register.reg_1)
 async def reg_1_callback(callback_query: types.CallbackQuery, state: FSMContext):
