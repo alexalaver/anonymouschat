@@ -40,9 +40,9 @@ class Data:
             self.cursor.execute("SELECT id FROM chats WHERE user_first=%s OR user_second=%s", (user_id, user_id,))
             return bool(len(self.cursor.fetchall()))
 
-    def add_queue_all(self, id, user_id):
+    def add_queue_all(self, user_id):
         with self.connect:
-            self.cursor.execute("INSERT INTO queue(id, user_id) VALUES(%s, %s)", (id, user_id,))
+            self.cursor.execute("INSERT INTO queue(user_id) VALUES(%s)", (user_id,))
             self.connect.commit()
 
     def check_numbers_id_queue(self):
@@ -64,15 +64,47 @@ class Data:
             else:
                 return False
 
-    def create_chat_all(self, id, user_first, user_second):
+    def get_user_queue_male(self):
+        with self.connect:
+            self.cursor.execute("SELECT user_id FROM queue_male")
+            user = self.cursor.fetchone()
+            if user is not None and bool(len(user)):
+                return user[0]
+            else:
+                return False
+
+    def get_user_queue_female(self):
+        with self.connect:
+            self.cursor.execute("SELECT user_id FROM queue_female")
+            user = self.cursor.fetchone()
+            if user is not None and bool(len(user)):
+                return user[0]
+            else:
+                return False
+
+    def create_chat_all(self, id, user_first, user_second, search_gender_first, search_gender_second):
         with self.connect:
             if user_first != 0:
-                self.cursor.execute("DELETE FROM queue WHERE user_id=%s", (user_second,))
-                self.cursor.execute("INSERT INTO chats(id, user_first, user_second) VALUES(%s, %s, %s)", (id, user_first, user_second,))
+                self.cursor.execute("INSERT INTO chats(id, user_first, user_second) VALUES(%s, %s, %s, %s, %s)", (id, user_first, user_second, search_gender_first, search_gender_second,))
                 self.connect.commit()
                 return True
             else:
                 return False
+
+    def delete_queue(self, user_second):
+        with self.connect:
+            self.cursor.execute("DELETE FROM queue WHERE user_id=%s", (user_second,))
+            self.connect.commit()
+
+    def delete_queue_male(self, user_second):
+        with self.connect:
+            self.cursor.execute("DELETE FROM queue_male WHERE user_id=%s", (user_second,))
+            self.connect.commit()
+
+    def delete_queue_female(self, user_second):
+        with self.connect:
+            self.cursor.execute("DELETE FROM queue_female WHERE user_id=%s", (user_second,))
+            self.connect.commit()
 
     def check_numbers_id_chat(self):
         with self.connect:
@@ -82,3 +114,34 @@ class Data:
                 return 0
             else:
                 return a[0]
+
+    def get_active_chat_second(self, user_id):
+        with self.connect:
+            self.cursor.execute("SELECT * FROM chats WHERE user_first=%s OR user_second=%s", (user_id, user_id,))
+            users = self.cursor.fetchone()
+            if users is not None:
+                if users[1] == user_id:
+                    return users[2]
+                elif users[2] == user_id:
+                    return users[1]
+            else:
+                return False
+
+    def delete_chats(self, user_id):
+        with self.connect:
+            self.cursor.execute("DELETE FROM chats WHERE user_first=%s OR user_second=%s", (user_id, user_id,))
+            self.connect.commit()
+
+    def delete_queue(self, user_id):
+        with self.connect:
+            self.cursor.execute("DELETE FROM queue WHERE user_id=%s", (user_id,))
+            self.connect.commit()
+
+    def select_gender_users(self, user_id):
+        with self.connect:
+            self.cursor.execute("SELECT gender FROM users WHERE user_id=%s", (user_id,))
+            gender = self.cursor.fetchone()
+            if gender is not None:
+                return gender[0]
+            else:
+                return False

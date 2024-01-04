@@ -2,6 +2,7 @@ from aiogram import Bot, Dispatcher, types, executor
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.storage import FSMContext
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.utils.exceptions import BotBlocked
 from data import Data
 import buttons
 import config as cfg
@@ -34,22 +35,39 @@ async def search_all_button(message):
                 if db.get_active_chat(user_id):
                     await message.answer(cfg.have_companion_error)
                 else:
-                    user_second = db.get_user_queue()
+                    gender_user = db.select_gender_users(user_id)
+                    if gender_user == "male":
+                        user_second = db.get_user_queue_male()
+                        drop = 1
+                    elif gender_user == "female":
+                        user_second = db.get_user_queue_female()
+                        drop = 2
+                    else:
+                        user_second = db.get_user_queue()
+                        drop = 3
                     cancel_button = buttons.CancelButton(types)
                     if user_second == False:
-                        id_queue = db.check_numbers_id_queue()
-                        id_queue += 1
-                        db.add_queue_all(id_queue, user_id)
+                        db.add_queue_all(user_id)
                         await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
                     else:
+                        search_gender_first = None
+                        search_gender_second = None
+                        if drop == 3:
+                            db.delete_queue(user_second)
+                        elif drop == 2:
+                            db.delete_queue_female(user_second)
+                            search_gender_second = "female"
+                        elif drop == 1:
+                            db.delete_queue_male(user_second)
+                            search_gender_second = "male"
                         id_chats = db.check_numbers_id_chat()
                         id_chats += 1
-                        db.create_chat_all(id_chats, user_id, user_second)
+                        db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second)
                         await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove())
                         await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove())
 
 @dp.message_handler(commands='start')
-async def start(message: types.Message):
+async def start_command(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         await message.delete()
         user_id = message.from_user.id
@@ -66,6 +84,24 @@ async def start(message: types.Message):
                 else:
                     markup = buttons.menu_buttons(types)
                     await message.answer("TEST", reply_markup=markup)
+
+@dp.message_handler(commands='stop')
+async def stop_command(message: types.Message):
+    if message.chat.type == types.ChatType.PRIVATE:
+        await message.delete()
+        user_id = message.from_user.id
+        user_second = db.get_active_chat_second(user_id)
+        if db.check_queue(user_id):
+            markup = buttons.menu_buttons(types)
+            await message.answer(cfg.stop_search_text, reply_markup=markup)
+            db.delete_queue(user_id)
+        elif user_second != False:
+            markup = buttons.menu_buttons(types)
+            await message.answer(cfg.stop_conversation_text, reply_markup=markup)
+            await dp.bot.send_message(chat_id=user_second, text=cfg.stop_conversation_second_text, reply_markup=markup)
+            db.delete_chats(user_id)
+        else:
+            await message.answer(cfg.error_commands)
 
 @dp.callback_query_handler(state=Register.reg_1)
 async def reg_1_callback(callback_query: types.CallbackQuery, state: FSMContext):
@@ -124,11 +160,40 @@ async def all_callback(callback_query: types.CallbackQuery):
             await callback_query.message.delete()
             await callback_query.answer(cfg.cannot_use_button, show_alert=True)
 
-@dp.message_handler()
+@dp.message_handler(content_types=['text', 'photo', 'document', 'video'])
 async def text_all(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
-        if message.text == cfg.search_all_button or message.text == "/search":
-            await search_all_button(message)
+        user_id = message.from_user.id
+        user_second = db.get_active_chat_second(user_id)
+        if user_second == False:
+            if message.text == cfg.search_all_button or message.text == "/search":
+                await search_all_button(message)
+        else:
+            try:
+                if message.text:
+                    if message.text in cfg.all_commands:
+                        await message.answer(cfg.chats_error_commands)
+                    elif message.text not in cfg.all_commands:
+                        await dp.bot.send_message(chat_id=user_second, text=message.text)
+                elif message.photo:
+                    if message.caption:
+                        await dp.bot.send_photo(chat_id=user_second, photo=message.photo[-1].file_id, caption=message.caption)
+                    else:
+                        await dp.bot.send_photo(chat_id=user_second, photo=message.photo[-1].file_id)
+                elif message.video:
+                    if message.caption:
+                        await dp.bot.send_photo(chat_id=user_second, photo=message.video.file_id, caption=message.caption)
+                    else:
+                        await dp.bot.send_photo(chat_id=user_second, photo=message.video.file_id)
+                else:
+                    await message.answer(cfg.message_send_second_error)
+            except BotBlocked:
+                db.delete_chats(user_id)
+                markup = buttons.menu_buttons(types)
+                await message.answer(cfg.message_send_blocked_error, reply_markup=markup)
+            except Exception as err:
+                print(f"[Ошибка при отправки сообщения] {err}")
+                await message.answer(cfg.message_send_error)
 
 if __name__ == "__main__":
     executor.start_polling(dp)
