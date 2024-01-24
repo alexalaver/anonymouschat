@@ -85,7 +85,7 @@ class Data:
     def create_chat_all(self, id, user_first, user_second, search_gender_first, search_gender_second):
         with self.connect:
             if user_first != 0:
-                self.cursor.execute("INSERT INTO chats(id, user_first, user_second) VALUES(%s, %s, %s, %s, %s)", (id, user_first, user_second, search_gender_first, search_gender_second,))
+                self.cursor.execute("INSERT INTO chats(id, user_first, user_second, search_gender_first, search_gender_second) VALUES(%s, %s, %s, %s, %s)", (id, user_first, user_second, search_gender_first, search_gender_second,))
                 self.connect.commit()
                 return True
             else:

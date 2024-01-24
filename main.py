@@ -10,7 +10,7 @@ import logging
 
 bot = Bot(token=cfg.BOT_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
-db = Data("localhost", "5432", "anonymouschat", "alex", "alexpass")
+db = Data("95.216.65.93", "5432", "anonymouschat", "anon_user", "anon828282")
 logging.basicConfig(level=logging.INFO)
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -35,6 +35,8 @@ async def search_all_button(message):
                 if db.get_active_chat(user_id):
                     await message.answer(cfg.have_companion_error)
                 else:
+                    user_second = False
+                    drop = None
                     gender_user = db.select_gender_users(user_id)
                     if gender_user == "male":
                         user_second = db.get_user_queue_male()
@@ -42,7 +44,7 @@ async def search_all_button(message):
                     elif gender_user == "female":
                         user_second = db.get_user_queue_female()
                         drop = 2
-                    else:
+                    if user_second == False:
                         user_second = db.get_user_queue()
                         drop = 3
                     cancel_button = buttons.CancelButton(types)
