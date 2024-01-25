@@ -195,6 +195,8 @@ async def text_all(message: types.Message):
                     await stop_command(message)
                 elif message.text in cfg.have_not_command:
                     await message.answer(cfg.have_not_commands_text)
+                else:
+                    await message.answer(cfg.command_not_error)
             else:
                 try:
                     if message.text:

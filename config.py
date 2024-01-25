@@ -42,3 +42,4 @@ stop_conversation_text = "💤 Դուք դադարեցրեցիք խոսակցո�
 stop_conversation_second_text = "💤 Ձեր զրուցակիցը դադարեցրեց խոսակցությունը:\n\nԳտնել մեկ այլ զրուցակից - /search"
 error_commands = "💤 Դուք չեք կարող օգտագործել այս հրամանը:"
 have_not_commands_text = "💤 Այս հրամանը դեռ հասանելի չէ:"
+command_not_error = "💤 Այս հրամանը գոյություն չունի: Գրեք /start հրամանը:"
