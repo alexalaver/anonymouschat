@@ -29,6 +29,7 @@ search_two_text = "💤 Դուք արդեն որոնման գործընթացո�
 have_companion_error = "💤 Դուք արդեն ունեք զրուցակից:"
 
 queue_wait_text = "⏱ Դուք ավելացվել եք հերթի մեջ, խնդրում ենք սպասել:"
+queue_wait_text_and_cancel = "⏱ Դուք չեղարկել եք զրուցակցի հետ զրույցը և ավելացվել եք հերթի մեջ, խնդրում ենք սպասել:"
 
 companion_right_text = """Գտնվել է զրուցակիցը 🦊\n\n/next - որոնել նոր զրուցակից\n/stop - ավարտել զրույցը\n/link - ուղարկել ձեր telegram-ը\n\n`https://t.me/AnonChatARM_bot`"""
 

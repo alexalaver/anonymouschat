@@ -141,3 +141,27 @@ class Data:
                 return gender[0]
             else:
                 return False
+
+    def select_serach_gender(self, user_id):
+        with self.connect:
+            self.cursor.execute("SELECT search_gender_first FROM chats WHERE user_first=%s", (user_id,))
+            search_gender_first = self.cursor.fetchone()
+            if search_gender_first is None:
+                self.cursor.execute("SELECT search_gender_second FROM chats WHERE user_second=%s", (user_id,))
+                search_gender_second = self.cursor.fetchone()
+                if search_gender_second is None:
+                    return None
+                else:
+                    return search_gender_second[0]
+            else:
+                return search_gender_first[0]
+
+    def add_queue_female(self, user_id):
+        with self.connect:
+            self.cursor.execute("INSERT INTO queue_female(user_id) VALUES(%s)", (user_id,))
+            self.connect.commit()
+
+    def add_queue_male(self, user_id):
+        with self.connect:
+            self.cursor.execute("INSERT INTO queue_male(user_id) VALUES(%s)", (user_id,))
+            self.connect.commit()
