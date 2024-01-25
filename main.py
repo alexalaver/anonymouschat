@@ -116,7 +116,7 @@ async def stop_command(message):
 
 ####################################### NEXT COMMAND FUNC
 
-async def next_command_func(message: types.Message):
+async def next_command_func(message):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
         if (not db.check_user(user_id)):
@@ -282,6 +282,8 @@ async def text_all(message: types.Message):
                     await start_command(message)
                 elif message.text == "/stop" or message.text == cfg.cancel_button:
                     await stop_command(message)
+                elif message.text == "/next":
+                    await next_command_func(message)
                 elif message.text in cfg.have_not_command:
                     await message.answer(cfg.have_not_commands_text)
                 else:
@@ -293,6 +295,8 @@ async def text_all(message: types.Message):
                             await message.answer(cfg.chats_error_commands)
                         elif message.text == "/stop":
                             await stop_command(message)
+                        elif message.text == "/next":
+                            await next_command_func(message)
                         elif message.text not in cfg.all_commands:
                             await dp.bot.send_message(chat_id=user_second, text=message.text)
                     elif message.photo:
