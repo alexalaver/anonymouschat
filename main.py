@@ -185,26 +185,18 @@ async def text_all(message: types.Message):
             await message.answer(cfg.select_gender_1_text, reply_markup=markup)
             await Register.reg_1.set()
         else:
-            try:
-                user_second = db.get_active_chat_second(user_id)
-                if user_second == False:
-                    if message.text == cfg.search_all_button or message.text == "/search":
-                        await search_all_button(message)
-                    elif message.text == "/start":
-                        await start_command(message)
-                    elif message.text == "/stop" or message.text == cfg.cancel_button:
-                        await stop_command(message)
-                    elif message.text in cfg.have_not_command:
-                        await message.answer(cfg.have_not_commands_text)
-                    else:
-                        await message.answer(cfg.command_not_error)
-            except BotBlocked:
-                db.delete_chats(user_id)
-                markup = buttons.menu_buttons()
-                await message.answer(cfg.message_send_blocked_error, reply_markup=markup)
-            except Exception as err:
-                print(f"[Ошибка при отправки сообщения] {err}")
-                await message.answer(cfg.message_send_error)
+            user_second = db.get_active_chat_second(user_id)
+            if user_second == False:
+                if message.text == cfg.search_all_button or message.text == "/search":
+                    await search_all_button(message)
+                elif message.text == "/start":
+                    await start_command(message)
+                elif message.text == "/stop" or message.text == cfg.cancel_button:
+                    await stop_command(message)
+                elif message.text in cfg.have_not_command:
+                    await message.answer(cfg.have_not_commands_text)
+                else:
+                    await message.answer(cfg.command_not_error)
             else:
                 try:
                     if message.text:
