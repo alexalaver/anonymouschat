@@ -66,8 +66,8 @@ async def search_all_button(message):
                         id_chats = db.check_numbers_id_chat()
                         id_chats += 1
                         db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second)
-                        await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove())
-                        await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove())
+                        await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                        await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
 
 ##################################### SEARCH ALL FUNCTION
 

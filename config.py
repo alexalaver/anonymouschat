@@ -30,7 +30,7 @@ have_companion_error = "💤 Դուք արդեն ունեք զրուցակից:"
 
 queue_wait_text = "⏱ Դուք ավելացվել եք հերթի մեջ, խնդրում ենք սպասել:"
 
-companion_right_text = """Գտնվել է զրուցակիցը 🦊\n\n/next - որոնել նոր զրուցակից\n/stop - ավարտել զրույցը\n/link - ուղարկել ձեր telegram-ը\n\nhttps://t.me/AnonChatARM_bot"""
+companion_right_text = """Գտնվել է զրուցակիցը 🦊\n\n/next - որոնել նոր զրուցակից\n/stop - ավարտել զրույցը\n/link - ուղարկել ձեր telegram-ը\n\n`https://t.me/AnonChatARM_bot`"""
 
 queue_error_commands = "💤 Դուք չեք կարող օգտագործել այս հրամանը, քանի որ հերթի մեջեք:"
 chats_error_commands = "💤 Դուք չեք կարող օգտագործել այս հրամանը, քանի որ շփվում եք զրուցակցի հետ:"
