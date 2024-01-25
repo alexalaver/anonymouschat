@@ -128,6 +128,11 @@ async def next_command_func(message):
                 await message.answer(cfg.search_two_text)
             else:
                 if db.get_active_chat(user_id):
+                    user_second_right = db.get_active_chat_second(user_id)
+                    markup = buttons.menu_buttons()
+                    await dp.bot.send_message(chat_id=user_second_right, text=cfg.stop_conversation_second_text, reply_markup=markup)
+                    db.delete_chats(user_id)
+
                     user_second = False
                     drop = None
                     gender_user = db.select_gender_users(user_id)
@@ -168,9 +173,6 @@ async def next_command_func(message):
                             elif gender_second_user == "male":
                                 db.add_queue_male(user_id)
                             await message.answer(cfg.queue_wait_text_and_cancel, reply_markup=cancel_button)
-                    markup = buttons.menu_buttons()
-                    await dp.bot.send_message(chat_id=user_second, text=cfg.stop_conversation_second_text, reply_markup=markup)
-                    db.delete_chats(user_id)
                 else:
                     user_second = False
                     drop = None
