@@ -145,12 +145,10 @@ class Data:
     def select_serach_gender(self, user_id):
         with self.connect:
             self.cursor.execute("SELECT search_gender_first FROM chats WHERE user_first=%s", (user_id,))
-            search_gender_first = self.cursor.fetchall()
-            print(search_gender_first)
+            search_gender_first = self.cursor.fetchone()
             if search_gender_first is None:
                 self.cursor.execute("SELECT search_gender_second FROM chats WHERE user_second=%s", (user_id,))
-                search_gender_second = self.cursor.fetchall()
-                print(search_gender_second)
+                search_gender_second = self.cursor.fetchone()
                 if search_gender_second is None:
                     return None
                 else:
