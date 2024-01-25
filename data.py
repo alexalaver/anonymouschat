@@ -132,10 +132,6 @@ class Data:
             self.cursor.execute("DELETE FROM chats WHERE user_first=%s OR user_second=%s", (user_id, user_id,))
             self.connect.commit()
 
-    def delete_queue(self, user_id):
-        with self.connect:
-            self.cursor.execute("DELETE FROM queue WHERE user_id=%s", (user_id,))
-            self.connect.commit()
 
     def select_gender_users(self, user_id):
         with self.connect:

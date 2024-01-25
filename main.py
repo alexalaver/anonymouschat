@@ -20,12 +20,13 @@ class Register(StatesGroup):
     reg_2 = State()
 
 
-#function_search_all
+##################################### SEARCH ALL FUNCTION
+
 async def search_all_button(message):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
         if(not db.check_user(user_id)):
-            markup = buttons.RegisterGender(types)
+            markup = buttons.RegisterGender()
             await message.answer(cfg.select_gender_1_text, reply_markup=markup)
             await Register.reg_1.set()
         else:
@@ -47,7 +48,7 @@ async def search_all_button(message):
                     if user_second == False:
                         user_second = db.get_user_queue()
                         drop = 3
-                    cancel_button = buttons.CancelButton(types)
+                    cancel_button = buttons.CancelButton()
                     if user_second == False:
                         db.add_queue_all(user_id)
                         await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
@@ -68,8 +69,11 @@ async def search_all_button(message):
                         await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove())
                         await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove())
 
-@dp.message_handler(commands='start')
-async def start_command(message: types.Message):
+##################################### SEARCH ALL FUNCTION
+
+####################################### START COMMAND FUNC
+
+async def start_command(message):
     if message.chat.type == types.ChatType.PRIVATE:
         await message.delete()
         user_id = message.from_user.id
@@ -80,34 +84,42 @@ async def start_command(message: types.Message):
                 await message.answer(cfg.chats_error_commands)
             else:
                 if(not db.check_user(user_id)):
-                    markup = buttons.RegisterGender(types)
+                    markup = buttons.RegisterGender()
                     await message.answer(cfg.select_gender_1_text, reply_markup=markup)
                     await Register.reg_1.set()
                 else:
-                    markup = buttons.menu_buttons(types)
+                    markup = buttons.menu_buttons()
                     await message.answer("TEST", reply_markup=markup)
 
-@dp.message_handler(commands='stop')
-async def stop_command(message: types.Message):
+####################################### START COMMAND FUNC
+
+####################################### STOP COMMAND FUNC
+
+async def stop_command(message):
     if message.chat.type == types.ChatType.PRIVATE:
         await message.delete()
         user_id = message.from_user.id
         user_second = db.get_active_chat_second(user_id)
         if db.check_queue(user_id):
-            markup = buttons.menu_buttons(types)
+            markup = buttons.menu_buttons()
             await message.answer(cfg.stop_search_text, reply_markup=markup)
             db.delete_queue(user_id)
         elif user_second != False:
-            markup = buttons.menu_buttons(types)
+            markup = buttons.menu_buttons()
             await message.answer(cfg.stop_conversation_text, reply_markup=markup)
             await dp.bot.send_message(chat_id=user_second, text=cfg.stop_conversation_second_text, reply_markup=markup)
             db.delete_chats(user_id)
         else:
             await message.answer(cfg.error_commands)
 
+####################################### STOP COMMAND FUNC
+
+
+########################## REGISTER IN THE BOT FUNC
+
 @dp.callback_query_handler(state=Register.reg_1)
 async def reg_1_callback(callback_query: types.CallbackQuery, state: FSMContext):
-    markup = buttons.RegisterAge(types)
+    markup = buttons.RegisterAge()
     if callback_query.data == "select_male_button":
         await state.update_data(gender="male")
         await callback_query.message.edit_text(cfg.select_gender_2_text, reply_markup=markup)
@@ -120,7 +132,7 @@ async def reg_1_callback(callback_query: types.CallbackQuery, state: FSMContext)
 @dp.message_handler(state=Register.reg_1)
 async def reg_1_text(message: types.Message):
     await message.delete()
-    markup = buttons.RegisterGender(types)
+    markup = buttons.RegisterGender()
     await message.answer(cfg.select_gender_1_text, reply_markup=markup)
 
 @dp.callback_query_handler(state=Register.reg_2)
@@ -142,7 +154,7 @@ async def reg_2_callback(callback_query: types.CallbackQuery, state: FSMContext)
     elif callback_query.data == "age_50_90":
         age = "50-90"
     db.add_user(id, user_id, first_name, username, gender, age)
-    markup = buttons.menu_buttons(types)
+    markup = buttons.menu_buttons()
     await callback_query.message.delete()
     await callback_query.message.answer(cfg.register_right, reply_markup=markup)
     await state.finish()
@@ -150,8 +162,10 @@ async def reg_2_callback(callback_query: types.CallbackQuery, state: FSMContext)
 @dp.message_handler(state=Register.reg_2)
 async def reg_2_text(message: types.Message):
     await message.delete()
-    markup = buttons.RegisterAge(types)
+    markup = buttons.RegisterAge()
     await message.answer(cfg.select_gender_2_text, reply_markup=markup)
+
+########################## REGISTER IN THE BOT FUNC
 
 @dp.callback_query_handler()
 async def all_callback(callback_query: types.CallbackQuery):
@@ -166,36 +180,47 @@ async def all_callback(callback_query: types.CallbackQuery):
 async def text_all(message: types.Message):
     if message.chat.type == types.ChatType.PRIVATE:
         user_id = message.from_user.id
-        user_second = db.get_active_chat_second(user_id)
-        if user_second == False:
-            if message.text == cfg.search_all_button or message.text == "/search":
-                await search_all_button(message)
+        if (not db.check_user(user_id)):
+            markup = buttons.RegisterGender()
+            await message.answer(cfg.select_gender_1_text, reply_markup=markup)
+            await Register.reg_1.set()
         else:
-            try:
-                if message.text:
-                    if message.text in cfg.all_commands:
-                        await message.answer(cfg.chats_error_commands)
-                    elif message.text not in cfg.all_commands:
-                        await dp.bot.send_message(chat_id=user_second, text=message.text)
-                elif message.photo:
-                    if message.caption:
-                        await dp.bot.send_photo(chat_id=user_second, photo=message.photo[-1].file_id, caption=message.caption)
+            user_second = db.get_active_chat_second(user_id)
+            if user_second == False:
+                if message.text == cfg.search_all_button or message.text == "/search":
+                    await search_all_button(message)
+                elif message.text == "/start":
+                    await start_command(message)
+                elif message.text == "/stop" or message.text == cfg.cancel_button:
+                    await stop_command(message)
+                elif message.text in cfg.have_not_command:
+                    await message.answer(cfg.have_not_commands_text)
+            else:
+                try:
+                    if message.text:
+                        if message.text in cfg.all_commands:
+                            await message.answer(cfg.chats_error_commands)
+                        elif message.text not in cfg.all_commands:
+                            await dp.bot.send_message(chat_id=user_second, text=message.text)
+                    elif message.photo:
+                        if message.caption:
+                            await dp.bot.send_photo(chat_id=user_second, photo=message.photo[-1].file_id, caption=message.caption)
+                        else:
+                            await dp.bot.send_photo(chat_id=user_second, photo=message.photo[-1].file_id)
+                    elif message.video:
+                        if message.caption:
+                            await dp.bot.send_photo(chat_id=user_second, photo=message.video.file_id, caption=message.caption)
+                        else:
+                            await dp.bot.send_photo(chat_id=user_second, photo=message.video.file_id)
                     else:
-                        await dp.bot.send_photo(chat_id=user_second, photo=message.photo[-1].file_id)
-                elif message.video:
-                    if message.caption:
-                        await dp.bot.send_photo(chat_id=user_second, photo=message.video.file_id, caption=message.caption)
-                    else:
-                        await dp.bot.send_photo(chat_id=user_second, photo=message.video.file_id)
-                else:
-                    await message.answer(cfg.message_send_second_error)
-            except BotBlocked:
-                db.delete_chats(user_id)
-                markup = buttons.menu_buttons(types)
-                await message.answer(cfg.message_send_blocked_error, reply_markup=markup)
-            except Exception as err:
-                print(f"[Ошибка при отправки сообщения] {err}")
-                await message.answer(cfg.message_send_error)
+                        await message.answer(cfg.message_send_second_error)
+                except BotBlocked:
+                    db.delete_chats(user_id)
+                    markup = buttons.menu_buttons()
+                    await message.answer(cfg.message_send_blocked_error, reply_markup=markup)
+                except Exception as err:
+                    print(f"[Ошибка при отправки сообщения] {err}")
+                    await message.answer(cfg.message_send_error)
 
 if __name__ == "__main__":
     executor.start_polling(dp)
