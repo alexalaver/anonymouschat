@@ -147,6 +147,7 @@ async def next_command_func(message):
                         user_second = db.get_user_queue()
                         drop = 3
                     cancel_button = buttons.CancelButton()
+                    await message.answer(search_gender_user)
                     if user_second == False and search_gender_user is None:
                         db.add_queue_all(user_id)
                         await message.answer(cfg.queue_wait_text_and_cancel, reply_markup=cancel_button)
