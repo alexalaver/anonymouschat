@@ -191,6 +191,8 @@ async def text_all(message: types.Message):
                     await search_all_button(message)
                 elif message.text == "/start":
                     await start_command(message)
+                elif message.text == "/stop" or message.text == cfg.cancel_button:
+                    await stop_command(message)
                 elif message.text in cfg.have_not_command:
                     await message.answer(cfg.have_not_commands_text)
                 else:
@@ -200,10 +202,10 @@ async def text_all(message: types.Message):
                     if message.text:
                         if message.text in cfg.all_commands:
                             await message.answer(cfg.chats_error_commands)
+                        elif message.text == "/stop":
+                            await stop_command(message)
                         elif message.text not in cfg.all_commands:
                             await dp.bot.send_message(chat_id=user_second, text=message.text)
-                        elif message.text == "/stop" or message.text == cfg.cancel_button:
-                            await stop_command(message)
                     elif message.photo:
                         if message.caption:
                             await dp.bot.send_photo(chat_id=user_second, photo=message.photo[-1].file_id, caption=message.caption)
