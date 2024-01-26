@@ -243,7 +243,7 @@ async def search_gender(message, gender):
                 await message.answer(cfg.search_two_text)
             else:
                 if db.get_active_chat(user_id):
-                    user_second = False
+                    user_second = None
                     drop = None
                     gender_second = None
                     if gender == "male":
@@ -254,12 +254,16 @@ async def search_gender(message, gender):
                         user_second = db.get_user_queue_female()
                         gender_second = "female"
                         drop = 2
-                    if user_second == False:
+                    if user_second == None:
                         user_second = db.get_user_queue()
+                        user_second_gender = db.select_gender_users(user_second)
+                        if user_second_gender == gender:
+                            drop = 3
+                        else:
+                            user_second = None
                         gender_second = None
-                        drop = 3
                     cancel_button = buttons.CancelButton()
-                    if user_second == False:
+                    if user_second == None:
                         if gender == "male":
                             db.add_queue_female(user_id)
                         elif gender == "female":
