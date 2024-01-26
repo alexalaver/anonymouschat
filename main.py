@@ -273,7 +273,7 @@ async def search_gender(message, gender):
                             db.add_queue_female(user_id)
                         elif gender == "female":
                             db.add_queue_male(user_id)
-                        await message.answer(cfg.queue_wait_text_and_cancel, reply_markup=cancel_button)
+                        await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
                     else:
                         if drop == 3:
                             db.delete_queue(user_second)
