@@ -389,6 +389,10 @@ async def text_all(message: types.Message):
                     await stop_command(message)
                 elif message.text == "/next":
                     await next_command_func(message)
+                elif message.text == cfg.female_button:
+                    await search_gender(message, "female")
+                elif message.text == cfg.male_button:
+                    await search_gender(message, "male")
                 elif message.text in cfg.have_not_command:
                     await message.answer(cfg.have_not_commands_text)
                 else:
