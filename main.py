@@ -155,6 +155,15 @@ async def next_command_func(message):
                             user_second = db.get_user_queue_female()
                             drop = 2
                     if user_second == False:
+                        if search_gender_user == "male":
+                            db.add_queue_male(user_id)
+                            drop = 1
+                        elif search_gender_user == "female":
+                            db.add_queue_female(user_id)
+                            drop = 2
+                        else:
+                            db.add_queue_all(user_id)
+                            drop = 3
                         user_second = db.get_user_queue()
                         drop = 3
                     cancel_button = buttons.CancelButton()
@@ -252,7 +261,10 @@ async def search_gender(message, gender):
                         drop = 3
                     cancel_button = buttons.CancelButton()
                     if user_second == False:
-                        db.add_queue_all(user_id)
+                        if gender == "male":
+                            db.add_queue_female(user_id)
+                        elif gender == "female":
+                            db.add_queue_male(user_id)
                         await message.answer(cfg.queue_wait_text_and_cancel, reply_markup=cancel_button)
                     else:
                         if gender == search_gender_user:
