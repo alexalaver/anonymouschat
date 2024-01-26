@@ -258,12 +258,15 @@ async def search_gender(message, gender):
                         drop = 2
                     if user_second == False:
                         user_second = db.get_user_queue()
-                        user_second_gender = db.select_gender_users(user_second)
-                        if user_second_gender == gender:
-                            drop = 3
+                        if user_second == False:
+                            pass
                         else:
-                            user_second = False
-                        gender_second = None
+                            user_second_gender = db.select_gender_users(user_second)
+                            if user_second_gender == gender:
+                                drop = 3
+                                gender_second = user_second_gender
+                            else:
+                                user_second = False
                     cancel_button = buttons.CancelButton()
                     if user_second == False:
                         if gender == "male":
