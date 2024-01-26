@@ -53,21 +53,25 @@ async def search_all_button(message):
                         db.add_queue_all(user_id)
                         await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
                     else:
-                        search_gender_first = None
-                        search_gender_second = None
-                        if drop == 3:
-                            db.delete_queue(user_second)
-                        elif drop == 2:
-                            db.delete_queue_female(user_second)
-                            search_gender_second = "female"
-                        elif drop == 1:
-                            db.delete_queue_male(user_second)
-                            search_gender_second = "male"
-                        id_chats = db.check_numbers_id_chat()
-                        id_chats += 1
-                        db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second)
-                        await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                        await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                        try:
+                            search_gender_first = None
+                            search_gender_second = None
+                            if drop == 3:
+                                db.delete_queue(user_second)
+                            elif drop == 2:
+                                db.delete_queue_female(user_second)
+                                search_gender_second = "female"
+                            elif drop == 1:
+                                db.delete_queue_male(user_second)
+                                search_gender_second = "male"
+                            id_chats = db.check_numbers_id_chat()
+                            id_chats += 1
+                            db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second)
+                            await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                            await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                        except BotBlocked:
+                            db.delete_chats(user_id)
+                            await message.answer(cfg.message_send_blocked_error)
 
 ##################################### SEARCH ALL FUNCTION
 
@@ -132,22 +136,29 @@ async def next_command_func(message):
                     markup = buttons.menu_buttons()
                     await dp.bot.send_message(chat_id=user_second_right, text=cfg.stop_conversation_second_text, reply_markup=markup)
                     db.delete_chats(user_id)
-
                     user_second = False
                     drop = None
                     gender_user = db.select_gender_users(user_id)
                     search_gender_user = db.select_serach_gender(user_id)
-                    if gender_user == "male":
-                        user_second = db.get_user_queue_male()
-                        drop = 1
-                    elif gender_user == "female":
-                        user_second = db.get_user_queue_female()
-                        drop = 2
+                    if search_gender_user is None:
+                        if gender_user == "male":
+                            user_second = db.get_user_queue_male()
+                            drop = 1
+                        elif gender_user == "female":
+                            user_second = db.get_user_queue_female()
+                            drop = 2
+                    else:
+                        if search_gender_user == "male":
+                            user_second = db.get_user_queue_male()
+                            drop = 1
+                        elif search_gender_user == "female":
+                            user_second = db.get_user_queue_female()
+                            drop = 2
                     if user_second == False:
                         user_second = db.get_user_queue()
                         drop = 3
                     cancel_button = buttons.CancelButton()
-                    if user_second == False and search_gender_user is None:
+                    if user_second == False:
                         db.add_queue_all(user_id)
                         await message.answer(cfg.queue_wait_text_and_cancel, reply_markup=cancel_button)
                     else:
@@ -208,6 +219,95 @@ async def next_command_func(message):
                         await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
 
 ####################################### NEXT COMMAND FUNC
+
+####################################### SEARCH GENDER FUNC
+
+async def search_gender(message, gender):
+    if message.chat.type == types.ChatType.PRIVATE:
+        user_id = message.from_user.id
+        if (not db.check_user(user_id)):
+            markup = buttons.RegisterGender()
+            await message.answer(cfg.select_gender_1_text, reply_markup=markup)
+            await Register.reg_1.set()
+        else:
+            if db.check_queue(user_id):
+                await message.answer(cfg.search_two_text)
+            else:
+                if db.get_active_chat(user_id):
+                    user_second = False
+                    drop = None
+                    gender_second = None
+                    search_gender_user = db.select_serach_gender(user_id)
+                    if gender == "male":
+                        user_second = db.get_user_queue_male()
+                        gender_second = "male"
+                        drop = 1
+                    elif gender == "female":
+                        user_second = db.get_user_queue_female()
+                        gender_second = "female"
+                        drop = 2
+                    if user_second == False:
+                        user_second = db.get_user_queue()
+                        gender_second = None
+                        drop = 3
+                    cancel_button = buttons.CancelButton()
+                    if user_second == False:
+                        db.add_queue_all(user_id)
+                        await message.answer(cfg.queue_wait_text_and_cancel, reply_markup=cancel_button)
+                    else:
+                        if gender == search_gender_user:
+                            if drop == 3:
+                                db.delete_queue(user_second)
+                            elif drop == 2:
+                                db.delete_queue_female(user_second)
+                            elif drop == 1:
+                                db.delete_queue_male(user_second)
+                            id_chats = db.check_numbers_id_chat()
+                            id_chats += 1
+                            db.create_chat_all(id_chats, user_id, user_second, gender, gender_second)
+                            await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                            await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                        else:
+                            if gender == "female":
+                                db.add_queue_female(user_id)
+                            elif gender == "male":
+                                db.add_queue_male(user_id)
+                            await message.answer(cfg.queue_wait_text_and_cancel, reply_markup=cancel_button)
+                else:
+                    user_second = False
+                    drop = None
+                    gender_user = db.select_gender_users(user_id)
+                    if gender_user == "male":
+                        user_second = db.get_user_queue_male()
+                        drop = 1
+                    elif gender_user == "female":
+                        user_second = db.get_user_queue_female()
+                        drop = 2
+                    if user_second == False:
+                        user_second = db.get_user_queue()
+                        drop = 3
+                    cancel_button = buttons.CancelButton()
+                    if user_second == False:
+                        db.add_queue_all(user_id)
+                        await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
+                    else:
+                        search_gender_first = None
+                        search_gender_second = None
+                        if drop == 3:
+                            db.delete_queue(user_second)
+                        elif drop == 2:
+                            db.delete_queue_female(user_second)
+                            search_gender_second = "female"
+                        elif drop == 1:
+                            db.delete_queue_male(user_second)
+                            search_gender_second = "male"
+                        id_chats = db.check_numbers_id_chat()
+                        id_chats += 1
+                        db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second)
+                        await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                        await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+
+####################################### SEARCH GENDER FUNC
 
 ########################## REGISTER IN THE BOT FUNC
 
