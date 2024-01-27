@@ -35,6 +35,23 @@ class Data:
             self.cursor.execute("SELECT user_id FROM queue WHERE user_id=%s", (id,))
             return bool(len(self.cursor.fetchall()))
 
+    def check_queue_male(self, id):
+        with self.connect:
+            self.cursor.execute("SELECT user_id FROM queue_male WHERE user_id=%s", (id,))
+            return bool(len(self.cursor.fetchall()))
+
+    def check_queue_female(self, id):
+        with self.connect:
+            self.cursor.execute("SELECT user_id FROM queue_female WHERE user_id=%s", (id,))
+            return bool(len(self.cursor.fetchall()))
+
+    def delete_queue_all(self, id):
+        with self.connect:
+            self.cursor.execute("DELETE FROM queue WHERE user_id=%s", (id,))
+            self.cursor.execute("DELETE FROM queue_male WHERE user_id=%s", (id,))
+            self.cursor.execute("DELETE FROM queue_female WHERE user_id=%s", (id,))
+            self.connect.commit()
+
     def get_active_chat(self, user_id):
         with self.connect:
             self.cursor.execute("SELECT id FROM chats WHERE user_first=%s OR user_second=%s", (user_id, user_id,))
