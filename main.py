@@ -141,7 +141,9 @@ async def next_command_func(message):
                         gender = get_full_chats[3]
                     else:
                         gender = get_full_chats[5]
+                    print(gender)
                     db.delete_chats(user_id)
+                    print(gender)
                     user_second = False
                     drop = None
                     gender_second = None
