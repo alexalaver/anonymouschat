@@ -402,6 +402,7 @@ async def text_all(message: types.Message):
                             await next_command_func(message)
                         elif message.text not in cfg.all_commands:
                             await dp.bot.send_message(chat_id=user_second, text=message.text)
+                            await message.answer(text=f"YES {db.select_search_gender(user_id)}")
                     elif message.photo:
                         if message.caption:
                             await dp.bot.send_photo(chat_id=user_second, photo=message.photo[-1].file_id, caption=message.caption)

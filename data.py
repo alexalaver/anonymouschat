@@ -159,35 +159,24 @@ class Data:
             else:
                 return False
 
-    def select_serach_gender(self, user_id):
-        with self.connect:
-            self.cursor.execute("SELECT search_gender_first FROM chats WHERE user_first=%s", (user_id,))
-            search_gender_first = self.cursor.fetchone()
-            print(search_gender_first)
-            if search_gender_first is None:
-                self.cursor.execute("SELECT search_gender_second FROM chats WHERE user_second=%s", (user_id),)
-                search_gender_second = self.cursor.fetchone()
-                if search_gender_second is None:
-                    return None
-                else:
-                    return search_gender_second[0]
-            else:
-                return search_gender_first[0]
-
     def select_search_gender(self, user_id):
         with self.connect:
             self.cursor.execute("SELECT id FROM chats WHERE user_first=%s", (user_id,))
             first = self.cursor.fetchone()
+            print(f"{first} FIRST")
             if first is None:
                 self.cursor.execute("SELECT id FROM chats WHERE user_Second=%s", (user_id,))
                 second = self.cursor.fetchone()
+                print(f"{second} SECOND")
                 if second is None:
                     return None
                 else:
                     self.cursor.execute("SELECT search_gender_second FROM chats WHERE id=%s", (second[0]))
+                    print(f"RIGHT {self.cursor.fetchone()[0]}")
                     return self.cursor.fetchone()[0]
             else:
                 self.cursor.execute("SELECT search_gender_first FROM chats WHERE id=%s", (first[0]))
+                print(f"RIGHT 2 {self.cursor.fetchone()[0]}")
                 return self.cursor.fetchone()[0]
 
     def add_queue_female(self, user_id):
