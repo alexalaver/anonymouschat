@@ -170,7 +170,9 @@ async def next_command_func(message):
                             pass
                         else:
                             user_second_gender = db.select_gender_users(user_second)
-                            if user_second_gender == gender:
+                            if gender is None:
+                                pass
+                            elif user_second_gender == gender:
                                 drop = 3
                                 gender_second = None
                             else:
