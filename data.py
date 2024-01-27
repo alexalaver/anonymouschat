@@ -164,7 +164,7 @@ class Data:
             self.cursor.execute("SELECT search_gender_first FROM chats WHERE user_first=%s", (user_id,))
             search_gender_first = self.cursor.fetchone()
             if search_gender_first is None:
-                self.cursor.execute("SELECT search_gender_second FROM chats WHERE user_second=%s", (user_id,))
+                self.cursor.execute("SELECT search_gender_second FROM chats WHERE user_second=%s", (int(user_id),))
                 search_gender_second = self.cursor.fetchone()
                 if search_gender_second is None:
                     return None

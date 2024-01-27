@@ -137,6 +137,7 @@ async def next_command_func(message):
                     await dp.bot.send_message(chat_id=user_second_right, text=cfg.stop_conversation_second_text, reply_markup=markup)
                     db.delete_chats(user_id)
                     gender = db.select_serach_gender(user_id)
+                    await message.answer(f"yeees {gender}")
                     user_second = False
                     drop = None
                     gender_second = None
