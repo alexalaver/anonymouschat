@@ -168,7 +168,7 @@ async def next_command_func(message):
                             user_second_gender = db.select_gender_users(user_second)
                             if user_second_gender == gender:
                                 drop = 3
-                                gender_second = user_second_gender
+                                gender_second = None
                             else:
                                 user_second = False
                     cancel_button = buttons.CancelButton()
@@ -277,7 +277,7 @@ async def search_gender(message, gender):
                             user_second_gender = db.select_gender_users(user_second)
                             if user_second_gender == gender:
                                 drop = 3
-                                gender_second = user_second_gender
+                                gender_second = None
                             else:
                                 user_second = False
                     cancel_button = buttons.CancelButton()
