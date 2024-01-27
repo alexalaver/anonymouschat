@@ -250,12 +250,22 @@ async def search_gender(message, gender):
                     gender_second = None
                     if gender == "male":
                         user_second = db.get_user_queue_male()
-                        gender_second = "male"
-                        drop = 1
+                        if user_second != False:
+                            user_second_gender = db.select_gender_users(user_second)
+                            if user_second_gender == gender:
+                                drop = 1
+                                gender_second = user_second_gender
+                            else:
+                                user_second = False
                     elif gender == "female":
                         user_second = db.get_user_queue_female()
-                        gender_second = "female"
-                        drop = 2
+                        if user_second != False:
+                            user_second_gender = db.select_gender_users(user_second)
+                            if user_second_gender == gender:
+                                drop = 2
+                                gender_second = user_second_gender
+                            else:
+                                user_second = False
                     if user_second == False:
                         user_second = db.get_user_queue()
                         if user_second == False:
@@ -270,9 +280,9 @@ async def search_gender(message, gender):
                     cancel_button = buttons.CancelButton()
                     if user_second == False:
                         if gender == "male":
-                            db.add_queue_female(user_id)
-                        elif gender == "female":
                             db.add_queue_male(user_id)
+                        elif gender == "female":
+                            db.add_queue_female(user_id)
                         await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
                     else:
                         if drop == 3:
