@@ -165,7 +165,7 @@ class Data:
             first = self.cursor.fetchone()
             print(f"{first} FIRST")
             if first is None:
-                self.cursor.execute("SELECT id FROM chats WHERE user_Second=%s", (user_id,))
+                self.cursor.execute("SELECT id FROM chats WHERE user_second=%s", (user_id,))
                 second = self.cursor.fetchone()
                 print(f"{second} SECOND")
                 if second is None:
