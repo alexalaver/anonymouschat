@@ -136,7 +136,7 @@ async def next_command_func(message):
                     markup = buttons.menu_buttons()
                     await dp.bot.send_message(chat_id=user_second_right, text=cfg.stop_conversation_second_text, reply_markup=markup)
                     db.delete_chats(user_id)
-                    gender = db.select_serach_gender(user_id)
+                    gender = db.select_search_gender(user_id)
                     user_second = False
                     drop = None
                     gender_second = None
@@ -176,6 +176,8 @@ async def next_command_func(message):
                             db.add_queue_male(user_id)
                         elif gender == "female":
                             db.add_queue_female(user_id)
+                        else:
+                            db.add_queue_all(user_id)
                         await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
                     else:
                         if drop == 3:
