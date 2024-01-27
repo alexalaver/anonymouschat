@@ -135,7 +135,12 @@ async def next_command_func(message):
                     user_second_right = db.get_active_chat_second(user_id)
                     markup = buttons.menu_buttons()
                     await dp.bot.send_message(chat_id=user_second_right, text=cfg.stop_conversation_second_text, reply_markup=markup)
-                    gender = db.select_search_gender(user_id)
+                    gender = None
+                    get_full_chats = db.get_full_chats_info(user_id)
+                    if get_full_chats[1] == user_id:
+                        gender = get_full_chats[3]
+                    else:
+                        gender = get_full_chats[5]
                     db.delete_chats(user_id)
                     user_second = False
                     drop = None
