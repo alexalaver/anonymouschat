@@ -182,7 +182,7 @@ class Data:
     def test_sa(self, user_id):
         with self.connect:
             self.cursor.execute("SELECT * FROM chats WHERE user_first=%s OR user_second=%s", (user_id, user_id,))
-            result = self.cursor.fetchall()
+            result = self.cursor.fetchall()[0]
             print(result)
 
     def add_queue_female(self, user_id):
