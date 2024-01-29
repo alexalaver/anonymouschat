@@ -203,7 +203,7 @@ class Data:
             if tarife is None:
                 return None
             else:
-                tarife[0]
+                return tarife[0]
 
     def update_tarife(self, user_id, tarife):
         with self.connect:
