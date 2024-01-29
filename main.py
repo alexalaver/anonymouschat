@@ -483,7 +483,9 @@ async def text_all(message: types.Message):
             await FORMSTATE.reg_1.set()
         else:
             user_second = db.get_active_chat_second(user_id)
-            if user_second == False:
+            if db.check_queue(user_id) or db.check_queue_male(user_id) or db.check_queue_female(user_id):
+                await message.answer(cfg.queue_error_commands)
+            elif user_second == False:
                 if message.text == cfg.search_all_button or message.text == "/search":
                     await search_all_button(message)
                 elif message.text == "/start":
@@ -500,8 +502,6 @@ async def text_all(message: types.Message):
                     await message.answer(cfg.have_not_commands_text)
                 else:
                     await message.answer(cfg.command_not_error)
-            elif db.check_queue(user_id) or db.check_queue_male(user_id) or db.check_queue_female(user_id):
-                await message.answer(cfg.queue_error_commands)
             else:
                 try:
                     if message.text:
