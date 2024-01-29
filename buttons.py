@@ -33,6 +33,13 @@ def CancelButton():
     )
     return markup
 
+def BackButton():
+    markup = ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    markup.add(
+        cfg.back_button
+    )
+    return markup
+
 def BuyTarifeButton():
     markup = InlineKeyboardMarkup(row_width=2)
     markup.add(
