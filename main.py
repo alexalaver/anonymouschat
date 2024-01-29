@@ -7,6 +7,8 @@ from data import Data
 import buttons
 import config as cfg
 import logging
+import datetime
+import other_functions as fnc
 
 bot = Bot(token=cfg.BOT_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
@@ -15,9 +17,11 @@ logging.basicConfig(level=logging.INFO)
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-class Register(StatesGroup):
+class FORMSTATE(StatesGroup):
     reg_1 = State()
     reg_2 = State()
+
+    buy_tarife_1 = State()
 
 
 ##################################### SEARCH ALL FUNCTION
@@ -28,9 +32,9 @@ async def search_all_button(message):
         if(not db.check_user(user_id)):
             markup = buttons.RegisterGender()
             await message.answer(cfg.select_gender_1_text, reply_markup=markup)
-            await Register.reg_1.set()
+            await FORMSTATE.reg_1.set()
         else:
-            if db.check_queue(user_id):
+            if db.check_queue(user_id) or db.check_queue_male(user_id) or db.check_queue_female(user_id):
                 await message.answer(cfg.search_two_text)
             else:
                 if db.get_active_chat(user_id):
@@ -90,7 +94,7 @@ async def start_command(message):
                 if(not db.check_user(user_id)):
                     markup = buttons.RegisterGender()
                     await message.answer(cfg.select_gender_1_text, reply_markup=markup)
-                    await Register.reg_1.set()
+                    await FORMSTATE.reg_1.set()
                 else:
                     markup = buttons.menu_buttons()
                     await message.answer("TEST", reply_markup=markup)
@@ -126,9 +130,9 @@ async def next_command_func(message):
         if (not db.check_user(user_id)):
             markup = buttons.RegisterGender()
             await message.answer(cfg.select_gender_1_text, reply_markup=markup)
-            await Register.reg_1.set()
+            await FORMSTATE.reg_1.set()
         else:
-            if db.check_queue(user_id):
+            if db.check_queue(user_id) or db.check_queue_male(user_id) or db.check_queue_female(user_id):
                 await message.answer(cfg.search_two_text)
             else:
                 if db.get_active_chat(user_id):
@@ -247,90 +251,190 @@ async def search_gender(message, gender):
         if (not db.check_user(user_id)):
             markup = buttons.RegisterGender()
             await message.answer(cfg.select_gender_1_text, reply_markup=markup)
-            await Register.reg_1.set()
+            await FORMSTATE.reg_1.set()
         else:
-            if db.check_queue(user_id):
+            if db.check_queue(user_id) or db.check_queue_male(user_id) or db.check_queue_female(user_id):
                 await message.answer(cfg.search_two_text)
             else:
-                if db.get_active_chat(user_id):
-                    await message.answer(cfg.chats_error_commands)
+                tarife = db.select_tarife(user_id)
+                current_time = datetime.datetime.now()
+                formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+                formatted_time = datetime.datetime.strptime(formatted_time, "%Y-%m-%d %H:%M:%S")
+                if tarife is None:
+                    markup = buttons.BuyTarifeButton()
+                    await message.answer(cfg.tarife_not_text, reply_markup=markup)
                 else:
-                    user_second = False
-                    drop = None
-                    gender_second = None
-                    user_first_gender = db.select_gender_users(user_id)
-                    if gender == "male":
-                        user_second = db.get_user_queue_male()
-                        if user_second != False:
-                            user_second_gender = db.select_gender_users(user_second)
-                            if user_second_gender == gender and user_first_gender == "male":
-                                drop = 1
-                                gender_second = user_second_gender
-                            else:
-                                user_second = False
-                    elif gender == "female":
-                        user_second = db.get_user_queue_female()
-                        if user_second != False:
-                            user_second_gender = db.select_gender_users(user_second)
-                            if user_second_gender == gender and user_first_gender == "female":
-                                drop = 2
-                                gender_second = user_second_gender
-                            else:
-                                user_second = False
-                    if user_second == False:
-                        user_second = db.get_user_queue()
-                        if user_second == False:
-                            pass
-                        else:
-                            user_second_gender = db.select_gender_users(user_second)
-                            if user_second_gender == gender:
-                                drop = 3
-                                gender_second = None
-                            else:
-                                user_second = False
-                    cancel_button = buttons.CancelButton()
-                    if user_second == False:
-                        if gender == "male":
-                            db.add_queue_male(user_id)
-                        elif gender == "female":
-                            db.add_queue_female(user_id)
-                        await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
+                    tarife_formatted = datetime.datetime.strptime(tarife, "%Y-%m-%d %H:%M:%S")
+                    if formatted_time >= tarife_formatted:
+                        markup = buttons.BuyTarifeButton()
+                        await message.answer(cfg.tarife_endend_text, reply_markup=markup)
                     else:
-                        if drop == 3:
-                            db.delete_queue(user_second)
-                        elif drop == 2:
-                            db.delete_queue_female(user_second)
-                        elif drop == 1:
-                            db.delete_queue_male(user_second)
-                        id_chats = db.check_numbers_id_chat()
-                        id_chats += 1
-                        db.create_chat_all(id_chats, user_id, user_second, gender, gender_second)
-                        await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                        await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                        if db.get_active_chat(user_id):
+                            await message.answer(cfg.chats_error_commands)
+                        else:
+                            user_second = False
+                            drop = None
+                            gender_second = None
+                            user_first_gender = db.select_gender_users(user_id)
+                            if gender == "male":
+                                user_second = db.get_user_queue_male()
+                                if user_second != False:
+                                    user_second_gender = db.select_gender_users(user_second)
+                                    if user_second_gender == gender and user_first_gender == "male":
+                                        drop = 1
+                                        gender_second = user_second_gender
+                                    else:
+                                        user_second = False
+                            elif gender == "female":
+                                user_second = db.get_user_queue_female()
+                                if user_second != False:
+                                    user_second_gender = db.select_gender_users(user_second)
+                                    if user_second_gender == gender and user_first_gender == "female":
+                                        drop = 2
+                                        gender_second = user_second_gender
+                                    else:
+                                        user_second = False
+                            if user_second == False:
+                                user_second = db.get_user_queue()
+                                if user_second == False:
+                                    pass
+                                else:
+                                    user_second_gender = db.select_gender_users(user_second)
+                                    if user_second_gender == gender:
+                                        drop = 3
+                                        gender_second = None
+                                    else:
+                                        user_second = False
+                            cancel_button = buttons.CancelButton()
+                            if user_second == False:
+                                if gender == "male":
+                                    db.add_queue_male(user_id)
+                                elif gender == "female":
+                                    db.add_queue_female(user_id)
+                                await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
+                            else:
+                                if drop == 3:
+                                    db.delete_queue(user_second)
+                                elif drop == 2:
+                                    db.delete_queue_female(user_second)
+                                elif drop == 1:
+                                    db.delete_queue_male(user_second)
+                                id_chats = db.check_numbers_id_chat()
+                                id_chats += 1
+                                db.create_chat_all(id_chats, user_id, user_second, gender, gender_second)
+                                await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                                await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
 
 ####################################### SEARCH GENDER FUNC
 
+####################################### BUTTONS BUY TARIFE
+
+async def buttons_buy_tarife_func(callback_query, state):
+    user_id = callback_query.from_user.id
+    tarife = db.select_tarife(user_id)
+    current_time = datetime.datetime.now()
+    formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+    formatted_time = datetime.datetime.strptime(formatted_time, "%Y-%m-%d %H:%M:%S")
+    markup = buttons.CancelButton()
+    if tarife is None:
+        all_tarife = callback_query.data.split("/")
+        sum_tarife = all_tarife[1][-1]
+        day_tarife = all_tarife[0]
+        await state.update_data(sum_tarife=sum_tarife, day_tarife=day_tarife)
+        await callback_query.message.delete()
+        await callback_query.message.answer(cfg.tarife_but_text(sum_tarife, day_tarife), reply_markup=markup)
+        await FORMSTATE.buy_tarife_1.set()
+    else:
+        tarife_formatted = datetime.datetime.strptime(tarife, "%Y-%m-%d %H:%M:%S")
+        if formatted_time >= tarife_formatted:
+            all_tarife = callback_query.data.split("/")
+            sum_tarife = all_tarife[1][-1]
+            day_tarife = all_tarife[0]
+            await state.update_data(sum_tarife=sum_tarife, day_tarife=day_tarife)
+            await callback_query.message.delete()
+            await callback_query.message.answer(cfg.tarife_but_text(sum_tarife, day_tarife), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+            await FORMSTATE.buy_tarife_1.set()
+        else:
+            await callback_query.message.delete()
+            await callback_query.answer(cfg.tarife_have_error, show_alert=True)
+
+async def photo_get_buy_tarife_func(message, state):
+    user_id = message.from_user.id
+    markup_menu = buttons.menu_buttons()
+    if message.text == cfg.back_button:
+        await message.answer(cfg.back_text, reply_markup=markup_menu)
+        await state.reset_state()
+    else:
+        if message.photo:
+            photo_file_id = message.photo[0].file_id
+            data = await state.get_data()
+            sum_tarife = data.get("sum_tarife")
+            day_tarife = data.get("day_tarife")
+            markup = buttons.ConfirmOrderButtons(user_id, sum_tarife, day_tarife)
+            await bot.send_photo(cfg.tarife_group_tag, caption=cfg.USER_SEND_PHOTO_TEXT(fnc.nick_with_link("Օգտագործողն", user_id), sum_tarife, day_tarife), photo=photo_file_id, reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
+            await message.answer(cfg.check_screen_right_text, reply_markup=markup_menu)
+            await state.finish()
+        else:
+            await message.answer(cfg.check_screen_error_text)
+
+@dp.message_handler(state=FORMSTATE.buy_tarife_1)
+async def buy_tarife_state(message: types.Message, state: FSMContext):
+    await photo_get_buy_tarife_func(message, state)
+
+####################################### BUTTONS BUY TARIFE
+
+async def buttons_accept_and_cancel_func(callback_query):
+    buttons_select = callback_query.data.split(":")
+    user_order_id = int(buttons_select[1])
+    accept_or_cancel = buttons_select[0]
+    message_id = callback_query.message.message_id
+    if accept_or_cancel == "cancel":
+        await bot.edit_message_caption(chat_id=cfg.tarife_group_tag, message_id=message_id, caption=cfg.CANCEL_USER_ORDER(fnc.nick_with_link("օգտագործողի", user_order_id)), reply_markup=None, parse_mode=types.ParseMode.MARKDOWN)
+        await bot.send_message(chat_id=user_order_id, text=cfg.cancel_tarife_text)
+    elif accept_or_cancel == "confirm":
+        sum_tarife = buttons_select[2]
+        day_tarife = buttons_select[3]
+        tarife_day = None
+        if day_tarife == cfg.one_day_tarife_button:
+            tarife_day = 1
+        elif day_tarife == cfg.one_week_tarife_button:
+            tarife_day = 7
+        elif day_tarife == cfg.one_month_tarife_button:
+            tarife_day = 30
+        elif day_tarife == cfg.one_year_tarife_button:
+            tarife_day = 365
+        elif day_tarife == cfg.forever_tarife_button:
+            tarife_day = 3650
+        current_time = datetime.datetime.now()
+        time_plus_tarife_days = current_time + datetime.timedelta(days=tarife_day)
+        formatted_time = time_plus_tarife_days.strftime("%Y-%m-%d %H:%M:%S")
+        db.update_tarife(user_order_id, formatted_time)
+        await bot.edit_message_caption(chat_id=cfg.tarife_group_tag, message_id=message_id, caption=cfg.CONFIRM_USER_ORDER(fnc.nick_with_link("օգտագործողի", user_order_id), day_tarife, sum_tarife), reply_markup=None, parse_mode=types.ParseMode.MARKDOWN)
+        await bot.send_message(chat_id=user_order_id, text=cfg.CONFIRM_ORDERS_USER_TEXT(sum_tarife, day_tarife), parse_mode=types.ParseMode.MARKDOWN)
+
+#################################### BUTTONS LOGIC ACCEPT AND CANCEL
+
 ########################## REGISTER IN THE BOT FUNC
 
-@dp.callback_query_handler(state=Register.reg_1)
+@dp.callback_query_handler(state=FORMSTATE.reg_1)
 async def reg_1_callback(callback_query: types.CallbackQuery, state: FSMContext):
     markup = buttons.RegisterAge()
     if callback_query.data == "select_male_button":
         await state.update_data(gender="male")
         await callback_query.message.edit_text(cfg.select_gender_2_text, reply_markup=markup)
-        await Register.reg_2.set()
+        await FORMSTATE.reg_2.set()
     elif callback_query.data == "select_female_button":
         await state.update_data(gender="female")
         await callback_query.message.edit_text(cfg.select_gender_2_text, reply_markup=markup)
-        await Register.reg_2.set()
+        await FORMSTATE.reg_2.set()
 
-@dp.message_handler(state=Register.reg_1)
+@dp.message_handler(state=FORMSTATE.reg_1)
 async def reg_1_text(message: types.Message):
     await message.delete()
     markup = buttons.RegisterGender()
     await message.answer(cfg.select_gender_1_text, reply_markup=markup)
 
-@dp.callback_query_handler(state=Register.reg_2)
+@dp.callback_query_handler(state=FORMSTATE.reg_2)
 async def reg_2_callback(callback_query: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     id = db.check_numbers_id()
@@ -354,7 +458,7 @@ async def reg_2_callback(callback_query: types.CallbackQuery, state: FSMContext)
     await callback_query.message.answer(cfg.register_right, reply_markup=markup)
     await state.finish()
 
-@dp.message_handler(state=Register.reg_2)
+@dp.message_handler(state=FORMSTATE.reg_2)
 async def reg_2_text(message: types.Message):
     await message.delete()
     markup = buttons.RegisterAge()
@@ -363,10 +467,10 @@ async def reg_2_text(message: types.Message):
 ########################## REGISTER IN THE BOT FUNC
 
 @dp.callback_query_handler()
-async def all_callback(callback_query: types.CallbackQuery):
+async def all_callback(callback_query: types.CallbackQuery, state: FSMContext):
     if callback_query.message.chat.type == types.ChatType.PRIVATE:
-        if callback_query.data == "test":
-            pass
+        if callback_query.data in cfg.all_tarife_buttons:
+            await buttons_buy_tarife_func(callback_query, state)
         else:
             await callback_query.message.delete()
             await callback_query.answer(cfg.cannot_use_button, show_alert=True)
@@ -378,7 +482,7 @@ async def text_all(message: types.Message):
         if (not db.check_user(user_id)):
             markup = buttons.RegisterGender()
             await message.answer(cfg.select_gender_1_text, reply_markup=markup)
-            await Register.reg_1.set()
+            await FORMSTATE.reg_1.set()
         else:
             user_second = db.get_active_chat_second(user_id)
             if user_second == False:
@@ -398,16 +502,18 @@ async def text_all(message: types.Message):
                     await message.answer(cfg.have_not_commands_text)
                 else:
                     await message.answer(cfg.command_not_error)
+            elif db.check_queue(user_id) or db.check_queue_male(user_id) or db.check_queue_female(user_id):
+                await message.answer(cfg.queue_error_commands)
             else:
                 try:
                     if message.text:
-                        if message.text in cfg.all_commands:
+                        if message.text in cfg.commands_forbid_conversation:
                             await message.answer(cfg.chats_error_commands)
                         elif message.text == "/stop":
                             await stop_command(message)
                         elif message.text == "/next":
                             await next_command_func(message)
-                        elif message.text not in cfg.all_commands:
+                        elif message.text not in cfg.commands_forbid_conversation:
                             await dp.bot.send_message(chat_id=user_second, text=message.text)
                     elif message.photo:
                         if message.caption:

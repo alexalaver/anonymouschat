@@ -1,11 +1,11 @@
 import config as cfg
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup
 
 def menu_buttons():
     markup = ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     markup.add(cfg.search_all_button)
     markup.row(cfg.male_button, cfg.female_button)
-    markup.add(cfg.settings_button)
+    markup.add(cfg.supports_button)
     return markup
 
 def RegisterGender():
@@ -31,4 +31,22 @@ def CancelButton():
     markup.add(
         cfg.cancel_button
     )
+    return markup
+
+def BuyTarifeButton():
+    markup = InlineKeyboardMarkup(row_width=2)
+    markup.add(
+        InlineKeyboardButton(text=cfg.one_day_tarife_button, callback_data=cfg.one_day_tarife_button),
+        InlineKeyboardButton(text=cfg.one_week_tarife_button, callback_data=cfg.one_week_tarife_button),
+        InlineKeyboardButton(text=cfg.one_month_tarife_button, callback_data=cfg.one_month_tarife_button),
+        InlineKeyboardButton(text=cfg.one_year_tarife_button, callback_data=cfg.one_year_tarife_button),
+        InlineKeyboardButton(text=cfg.forever_tarife_button,callback_data=cfg.forever_tarife_button)
+    )
+    return markup
+
+def ConfirmOrderButtons(callback_data, sum, day):
+    markup = InlineKeyboardMarkup(row_width=1)
+    btn1 = InlineKeyboardButton(text="Հաստատել", callback_data=f"confirm:{callback_data}:{sum}:{day}")
+    btn2 = InlineKeyboardButton(text="Չեղարկել", callback_data=f"cancel:{callback_data}")
+    markup.add(btn1, btn2)
     return markup

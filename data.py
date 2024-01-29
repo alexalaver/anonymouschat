@@ -195,3 +195,17 @@ class Data:
         with self.connect:
             self.cursor.execute("INSERT INTO queue_male(user_id) VALUES(%s)", (user_id,))
             self.connect.commit()
+
+    def select_tarife(self, user_id):
+        with self.connect:
+            self.cursor.execute("SELECT tarife FROM users WHERE user_id=%s", (user_id,))
+            tarife = self.cursor.fetchone()
+            if tarife is None:
+                return None
+            else:
+                tarife[0]
+
+    def update_tarife(self, user_id, tarife):
+        with self.connect:
+            self.cursor.execute("UPDATE users SET tarife=%s WHERE user_id=%s", (tarife, user_id,))
+            self.connect.commit()
