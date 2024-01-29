@@ -342,7 +342,7 @@ async def buttons_buy_tarife_func(callback_query, state):
         day_tarife = all_tarife[0]
         await state.update_data(sum_tarife=sum_tarife, day_tarife=day_tarife)
         await callback_query.message.delete()
-        await callback_query.message.answer(cfg.tarife_but_text(sum_tarife, day_tarife), reply_markup=markup)
+        await callback_query.message.answer(cfg.tarife_but_text(sum_tarife, day_tarife), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
         await FORMSTATE.buy_tarife_1.set()
     else:
         tarife_formatted = datetime.datetime.strptime(tarife, "%Y-%m-%d %H:%M:%S")
