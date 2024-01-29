@@ -351,8 +351,8 @@ async def buttons_buy_tarife_func(callback_query, state):
             await callback_query.message.answer(cfg.tarife_but_text(sum_tarife, day_tarife), reply_markup=markup, parse_mode=types.ParseMode.MARKDOWN)
             await FORMSTATE.buy_tarife_1.set()
         else:
-            await callback_query.message.delete()
             await callback_query.answer(cfg.tarife_have_error, show_alert=True)
+            await callback_query.message.delete()
 
 async def photo_get_buy_tarife_func(message, state):
     user_id = message.from_user.id
