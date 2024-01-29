@@ -484,14 +484,15 @@ async def text_all(message: types.Message):
         else:
             user_second = db.get_active_chat_second(user_id)
             if db.check_queue(user_id) or db.check_queue_male(user_id) or db.check_queue_female(user_id):
-                await message.answer(cfg.queue_error_commands)
+                if message.text == "/stop" or message.text == cfg.cancel_button:
+                    await stop_command(message)
+                else:
+                    await message.answer(cfg.queue_error_commands)
             elif user_second == False:
                 if message.text == cfg.search_all_button or message.text == "/search":
                     await search_all_button(message)
                 elif message.text == "/start":
                     await start_command(message)
-                elif message.text == "/stop" or message.text == cfg.cancel_button:
-                    await stop_command(message)
                 elif message.text == "/next":
                     await next_command_func(message)
                 elif message.text == cfg.female_button:
