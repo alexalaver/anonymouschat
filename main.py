@@ -474,6 +474,8 @@ async def all_callback(callback_query: types.CallbackQuery, state: FSMContext):
         else:
             await callback_query.message.delete()
             await callback_query.answer(cfg.cannot_use_button, show_alert=True)
+    elif callback_query.message.chat.username == cfg.tarife_group_tag[1:]:
+        await buttons_accept_and_cancel_func(callback_query)
 
 @dp.message_handler(content_types=['text', 'photo', 'document', 'video'])
 async def text_all(message: types.Message):

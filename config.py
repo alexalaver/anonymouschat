@@ -10,7 +10,7 @@ back_button = "Վերադառնալ"
 tarife_group_tag = "@AnonChatARMTarife"
 supports_group_tag = "@AnonChatARMSupport"
 
-commands_forbid_conversation = [search_all_button, supports_button, female_button, male_button, cancel_button, "/start", "/search", "/next"]
+commands_forbid_conversation = [search_all_button, supports_button, female_button, male_button, cancel_button, "/start", "/search"]
 commands_forbid_search = [search_all_button, supports_button, female_button, male_button, "/start", "/search", "/next"]
 have_not_command = [supports_button]
 
