@@ -377,7 +377,7 @@ async def photo_get_buy_tarife_func(message, state):
         else:
             await message.answer(cfg.check_screen_error_text)
 
-@dp.message_handler(state=FORMSTATE.buy_tarife_1)
+@dp.message_handler(state=FORMSTATE.buy_tarife_1, content_types=['text', 'photo'])
 async def buy_tarife_state(message: types.Message, state: FSMContext):
     await photo_get_buy_tarife_func(message, state)
 
