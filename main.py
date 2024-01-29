@@ -258,14 +258,12 @@ async def search_gender(message, gender):
             else:
                 tarife = db.select_tarife(user_id)
                 current_time = datetime.datetime.now()
-                formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
-                formatted_time = datetime.datetime.strptime(formatted_time, "%Y-%m-%d %H:%M:%S")
                 if tarife is None:
                     markup = buttons.BuyTarifeButton()
                     await message.answer(cfg.tarife_not_text, reply_markup=markup)
                 else:
                     tarife_formatted = datetime.datetime.strptime(tarife, "%Y-%m-%d %H:%M:%S")
-                    if formatted_time >= tarife_formatted:
+                    if current_time >= tarife_formatted:
                         markup = buttons.BuyTarifeButton()
                         await message.answer(cfg.tarife_endend_text, reply_markup=markup)
                     else:
@@ -333,8 +331,6 @@ async def buttons_buy_tarife_func(callback_query, state):
     user_id = callback_query.from_user.id
     tarife = db.select_tarife(user_id)
     current_time = datetime.datetime.now()
-    formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
-    formatted_time = datetime.datetime.strptime(formatted_time, "%Y-%m-%d %H:%M:%S")
     markup = buttons.BackButton()
     if tarife is None:
         all_tarife = callback_query.data.split("/")
@@ -346,7 +342,7 @@ async def buttons_buy_tarife_func(callback_query, state):
         await FORMSTATE.buy_tarife_1.set()
     else:
         tarife_formatted = datetime.datetime.strptime(tarife, "%Y-%m-%d %H:%M:%S")
-        if formatted_time >= tarife_formatted:
+        if current_time >= tarife_formatted:
             all_tarife = callback_query.data.split("/")
             sum_tarife = all_tarife[1][:-1]
             day_tarife = all_tarife[0]
