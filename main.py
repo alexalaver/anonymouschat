@@ -395,15 +395,15 @@ async def buttons_accept_and_cancel_func(callback_query):
         sum_tarife = buttons_select[2]
         day_tarife = buttons_select[3]
         tarife_day = None
-        if day_tarife == cfg.one_day_tarife_button:
+        if day_tarife == cfg.one_day_tarife_button.split("/")[0]:
             tarife_day = 1
-        elif day_tarife == cfg.one_week_tarife_button:
+        elif day_tarife == cfg.one_week_tarife_button.split("/")[0]:
             tarife_day = 7
-        elif day_tarife == cfg.one_month_tarife_button:
+        elif day_tarife == cfg.one_month_tarife_button.split("/")[0]:
             tarife_day = 30
-        elif day_tarife == cfg.one_year_tarife_button:
+        elif day_tarife == cfg.one_year_tarife_button.split("/")[0]:
             tarife_day = 365
-        elif day_tarife == cfg.forever_tarife_button:
+        elif day_tarife == cfg.forever_tarife_button.split("/")[0]:
             tarife_day = 3650
         current_time = datetime.datetime.now()
         time_plus_tarife_days = current_time + datetime.timedelta(days=tarife_day)
