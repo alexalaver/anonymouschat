@@ -338,7 +338,7 @@ async def buttons_buy_tarife_func(callback_query, state):
     markup = buttons.BackButton()
     if tarife is None:
         all_tarife = callback_query.data.split("/")
-        sum_tarife = all_tarife[1][-1]
+        sum_tarife = all_tarife[1][:-1]
         day_tarife = all_tarife[0]
         await state.update_data(sum_tarife=sum_tarife, day_tarife=day_tarife)
         await callback_query.message.delete()
@@ -348,7 +348,7 @@ async def buttons_buy_tarife_func(callback_query, state):
         tarife_formatted = datetime.datetime.strptime(tarife, "%Y-%m-%d %H:%M:%S")
         if formatted_time >= tarife_formatted:
             all_tarife = callback_query.data.split("/")
-            sum_tarife = all_tarife[1][-1]
+            sum_tarife = all_tarife[1][:-1]
             day_tarife = all_tarife[0]
             await state.update_data(sum_tarife=sum_tarife, day_tarife=day_tarife)
             await callback_query.message.delete()
