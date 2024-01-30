@@ -105,9 +105,9 @@ def USER_SEND_TASK_PHOTO_TEXT(user, user_id):
     return f"{user}({user_id}) նկար է ներկայացրել:"
 
 def SUPPORT_RIGHT_TEXT(text):
-    return f"Մոդերատորը պատասխանել է ձեր հաղորդագրությանը:\n\n{text}"
+    return f"📞 Մոդերատորը պատասխանել է ձեր հաղորդագրությանը:\n\n{text}"
 
 def SUPPORT_RIGHT_TEXT_PHOTO(text):
-    return f"Մոդերատորը պատասխանել է ձեր հաղորդագրությանը և լուսանկար է ուղարկել։:\n\n{text}"
+    return f"📞 Մոդերատորը պատասխանել է ձեր հաղորդագրությանը և լուսանկար է ուղարկել։:\n\n{text}"
 
-SUPPORT_RIGHT_PHOTO_SEND = "Մոդերատորը ձեզ լուսանկար է ուղարկել։"
+SUPPORT_RIGHT_PHOTO_SEND = "🖼 Մոդերատորը ձեզ լուսանկար է ուղարկել։"
