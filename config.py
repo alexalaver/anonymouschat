@@ -108,9 +108,9 @@ def SUPPORT_RIGHT_TEXT(text):
     return f"📞 Մոդերատորը պատասխանել է ձեր հաղորդագրությանը:\n\n{text}"
 
 def SUPPORT_RIGHT_TEXT_PHOTO(text):
-    return f"📞 Մոդերատորը պատասխանել է ձեր հաղորդագրությանը և լուսանկար է ուղարկել։:\n\n{text}"
+    return f"📞 Մոդերատորը պատասխանել է ձեր հաղորդագրությանը և նկար է ուղարկել։:\n\n{text}"
 
-SUPPORT_RIGHT_PHOTO_SEND = "🖼 Մոդերատորը ձեզ լուսանկար է ուղարկել։"
+SUPPORT_RIGHT_PHOTO_SEND = "🖼 Մոդերատորը ձեզ նկար է ուղարկել։"
 
 def SEND_COMMAND_TEXT(text):
     return f"📞 Մոդերատորը ձեզ նամակ է ուղարկել:\n\n{text}"
