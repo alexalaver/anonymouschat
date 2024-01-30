@@ -99,10 +99,10 @@ support_user_send_sup_text = "👉🏻 Մենք ստացել ենք Ձեր հա�
 support_user_send_sup_error = "📄 Հարգելի օգտատեր, դուք կարող եք ուղարկել միայն հարց, կամ լուսանկար։"
 
 def USER_SEND_TASK_TEXT(user, user_id):
-    return f"{user}({user_id}) հարց է ներկայացրել:"
+    return f"{user}(`{user_id}`) հարց է ներկայացրել:"
 
 def USER_SEND_TASK_PHOTO_TEXT(user, user_id):
-    return f"{user}({user_id}) նկար է ներկայացրել:"
+    return f"{user}(`{user_id}`) նկար է ներկայացրել:"
 
 def SUPPORT_RIGHT_TEXT(text):
     return f"📞 Մոդերատորը պատասխանել է ձեր հաղորդագրությանը:\n\n{text}"
@@ -111,3 +111,11 @@ def SUPPORT_RIGHT_TEXT_PHOTO(text):
     return f"📞 Մոդերատորը պատասխանել է ձեր հաղորդագրությանը և լուսանկար է ուղարկել։:\n\n{text}"
 
 SUPPORT_RIGHT_PHOTO_SEND = "🖼 Մոդերատորը ձեզ լուսանկար է ուղարկել։"
+
+def SEND_COMMAND_TEXT(text):
+    return f"📞 Մոդերատորը ձեզ նամակ է ուղարկել:\n\n{text}"
+
+supports_send_right_text = "📨 Դուք հաջողությամբ հաղորդագրություն եք ուղարկել օգտվողին:"
+send_message_user_support_error = "📮 Այս օգտվողն ավարտել է երկխոսությունը բոտի հետ:"
+
+shablon_send_command = "<< /send id TEXT >>"

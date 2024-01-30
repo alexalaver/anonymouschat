@@ -450,11 +450,28 @@ async def supports_send_user_func(message):
         user_first_id = None
     if message.text:
         await bot.send_message(user_first_id, cfg.SUPPORT_RIGHT_TEXT(message.text))
+        await message.answer(cfg.supports_send_right_text)
     elif message.photo:
         if message.caption:
             await bot.send_photo(user_first_id, caption=cfg.SUPPORT_RIGHT_TEXT_PHOTO(message.caption), photo=message.photo[0].file_id)
+            await message.answer(cfg.supports_send_right_text)
         else:
             await bot.send_photo(user_first_id, caption=cfg.SUPPORT_RIGHT_PHOTO_SEND, photo=message.photo[0].file_id)
+            await message.answer(cfg.supports_send_right_text)
+
+async def send_command_admin(message):
+    message_text = message.text.split(maxsplit=2)
+    if len(message_text) > 2:
+        if(not db.check_user(int(message_text[1]))):
+            pass
+        else:
+            try:
+                await bot.send_message(chat_id=int(message_text[1]), text=cfg.SEND_COMMAND_TEXT(message_text[2]))
+                await message.answer(cfg.supports_send_right_text)
+            except BotBlocked:
+                await message.answer(cfg.send_message_user_support_error)
+    else:
+        await message.answer(cfg.shablon_send_command)
 
 @dp.message_handler(state=FORMSTATE.supports_1, content_types=['text', 'photo'])
 async def user_send_message_support_state(message: types.Message, state: FSMContext):
@@ -588,7 +605,12 @@ async def text_all(message: types.Message):
                     print(f"[Ошибка при отправки сообщения] {err}")
                     await message.answer(cfg.message_send_error)
     elif message.chat.username == cfg.supports_group_tag[1:]:
-        await supports_send_user_func(message)
+        if message.reply_to_message:
+            await supports_send_user_func(message)
+        else:
+            if message.text.split(maxsplit=2)[0] == "/send":
+                await send_command_admin(message)
+
 
 if __name__ == "__main__":
     executor.start_polling(dp)
