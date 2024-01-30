@@ -9,6 +9,7 @@ import config as cfg
 import logging
 import datetime
 import other_functions as fnc
+import re
 
 bot = Bot(token=cfg.BOT_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
@@ -20,8 +21,8 @@ logger = logging.getLogger(__name__)
 class FORMSTATE(StatesGroup):
     reg_1 = State()
     reg_2 = State()
-
     buy_tarife_1 = State()
+    supports_1 = State()
 
 
 ##################################### SEARCH ALL FUNCTION
@@ -410,6 +411,57 @@ async def buttons_accept_and_cancel_func(callback_query):
 
 #################################### BUTTONS LOGIC ACCEPT AND CANCEL
 
+#################################### SUPPORTS FUNCS
+
+async def supports_button_func(message):
+    markup = buttons.BackButton()
+    await message.answer(cfg.supports_button_text, reply_markup=markup)
+    await FORMSTATE.supports_1.set()
+
+async def supports_user_send_support_func(message, state):
+    user_id = message.from_user.id
+    markup = buttons.menu_buttons()
+    if message.text == cfg.back_button:
+        await message.answer(cfg.back_text, reply_markup=markup)
+        await state.finish()
+    else:
+        if message.text:
+            await bot.send_message(cfg.supports_group_tag, f"{cfg.USER_SEND_TASK_TEXT(user=fnc.nick_with_link('Օգտատերը', user_id), user_id=user_id)}\n\n{message.text}", parse_mode=types.ParseMode.MARKDOWN)
+            await message.answer(cfg.support_user_send_sup_text, reply_markup=markup)
+        elif message.photo:
+            if message.caption:
+                await bot.send_photo(cfg.supports_group_tag, caption=f"{cfg.USER_SEND_TASK_TEXT(user=fnc.nick_with_link('Օգտատերը', user_id), user_id=user_id)}\n\n{message.caption}", photo=message.photo[0].file_id, parse_mode=types.ParseMode.MARKDOWN)
+                await message.answer(cfg.support_user_send_sup_text, reply_markup=markup)
+            else:
+                await bot.send_photo(cfg.supports_group_tag, caption=f"{cfg.USER_SEND_TASK_PHOTO_TEXT(user=fnc.nick_with_link('Օգտատերը', user_id), user_id=user_id)}", photo=message.photo[0].file_id, parse_mode=types.ParseMode.MARKDOWN)
+                await message.answer(cfg.support_user_send_sup_text, reply_markup=markup)
+        else:
+            await message.answer(cfg.support_user_send_sup_error)
+
+async def supports_send_user_func(message):
+    match = None
+    if message.reply_to_message.text:
+        match = re.search(r'\((.*?)\)', message.reply_to_message.text)
+    elif message.reply_to_message.caption:
+        match = re.search(r'\((.*?)\)', message.reply_to_message.caption)
+    if match:
+        user_first_id = match.group(1)
+    else:
+        user_first_id = None
+    if message.text:
+        await bot.send_message(user_first_id, cfg.SUPPORT_RIGHT_TEXT(message.text))
+    elif message.photo:
+        if message.caption:
+            await bot.send_photo(user_first_id, caption=cfg.SUPPORT_RIGHT_TEXT_PHOTO(message.caption), photo=message.photo[0].file_id)
+        else:
+            await bot.send_photo(user_first_id, caption=cfg.SUPPORT_RIGHT_PHOTO_SEND, photo=message.photo[0].file_id)
+
+@dp.message_handler(state=FORMSTATE.supports_1, content_types=['text', 'photo'])
+async def user_send_message_support_state(message: types.Message, state: FSMContext):
+    await supports_user_send_support_func(message, state)
+
+#################################### SUPPORTS FUNCS
+
 ########################## REGISTER IN THE BOT FUNC
 
 @dp.callback_query_handler(state=FORMSTATE.reg_1)
@@ -499,6 +551,8 @@ async def text_all(message: types.Message):
                     await search_gender(message, "female")
                 elif message.text == cfg.male_button:
                     await search_gender(message, "male")
+                elif message.text == cfg.supports_button:
+                    await supports_button_func(message)
                 elif message.text in cfg.have_not_command:
                     await message.answer(cfg.have_not_commands_text)
                 else:
@@ -533,6 +587,8 @@ async def text_all(message: types.Message):
                 except Exception as err:
                     print(f"[Ошибка при отправки сообщения] {err}")
                     await message.answer(cfg.message_send_error)
+    elif message.chat.username == cfg.supports_group_tag[1:]:
+        await supports_send_user_func(message)
 
 if __name__ == "__main__":
     executor.start_polling(dp)
