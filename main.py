@@ -267,6 +267,7 @@ async def search_gender(message, gender):
                     if current_time >= tarife_formatted:
                         markup = buttons.BuyTarifeButton()
                         await message.answer(cfg.tarife_endend_text, reply_markup=markup)
+                        db.update_tarife(user_id, None)
                     else:
                         if db.get_active_chat(user_id):
                             await message.answer(cfg.chats_error_commands)
