@@ -226,12 +226,16 @@ async def next_command_func(message):
                             search_gender_second = None
                             if drop == 3:
                                 db.delete_queue(user_second)
+                                print('right 1')
                             elif drop == 2:
                                 db.delete_queue_female(user_second)
                                 search_gender_second = "female"
+                                print('right 2')
                             elif drop == 1:
                                 db.delete_queue_male(user_second)
                                 search_gender_second = "male"
+                                print('right 3')
+                            print('right 4')
                             id_chats = db.check_numbers_id_chat()
                             id_chats += 1
                             db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second)
