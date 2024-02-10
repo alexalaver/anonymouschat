@@ -11,7 +11,7 @@ tarife_group_tag = "@AnonChatARMTarife"
 supports_group_tag = "@AnonChatARMSupport"
 
 commands_forbid_conversation = [search_all_button, supports_button, female_button, male_button, cancel_button, "/start", "/search"]
-commands_forbid_search = [search_all_button, supports_button, female_button, male_button, "/start", "/search", "/next"]
+commands_forbid_search = [search_all_button, supports_button, female_button, male_button, "/start", "/search", "/next", "/link"]
 have_not_command = [supports_button]
 
 select_gender_1_text = "1. Սկսելու համար ընտրեք ձեր սեռը:"
@@ -119,3 +119,8 @@ supports_send_right_text = "📨 Դուք հաջողությամբ հաղորդ�
 send_message_user_support_error = "📮 Այս օգտվողն ավարտել է երկխոսությունը բոտի հետ:"
 
 shablon_send_command = "<< /send id TEXT >>"
+
+send_your_link_text_1 = "Դուք հաջողությամբ ուղարկեցիք ձեր պրոֆիլի հղումը ձեր զրուցակցին: ✔"
+
+def send_your_link_text_2(link):
+    return f"{link} հղում է ուղարկել իր տելեգրամ ակկաունտին։"

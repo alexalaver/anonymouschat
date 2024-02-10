@@ -480,6 +480,17 @@ async def user_send_message_support_state(message: types.Message, state: FSMCont
 
 #################################### SUPPORTS FUNCS
 
+#################################### LINK COMMAND FUNC
+
+async def link_command_func(message):
+    user_id = message.from_user.id
+    user_second = db.get_active_chat_second(user_id)
+    await message.answer(cfg.send_your_link_text_1)
+    await bot.send_message(chat_id=user_second, text=cfg.send_your_link_text_2(fnc.nick_with_link("Օգտագործողը", user_id)), parse_mode=types.ParseMode.MARKDOWN)
+
+
+#################################### LINK COMMAND FUNC
+
 ########################## REGISTER IN THE BOT FUNC
 
 @dp.callback_query_handler(state=FORMSTATE.reg_1)
@@ -584,6 +595,8 @@ async def text_all(message: types.Message):
                             await stop_command(message)
                         elif message.text == "/next":
                             await next_command_func(message)
+                        elif message.text == "/link":
+                            await link_command_func(message)
                         elif message.text not in cfg.commands_forbid_conversation:
                             await dp.bot.send_message(chat_id=user_second, text=message.text)
                     elif message.photo:
