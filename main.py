@@ -432,14 +432,17 @@ async def supports_user_send_support_func(message, state):
     else:
         if message.text:
             await bot.send_message(cfg.supports_group_tag, f"{cfg.USER_SEND_TASK_TEXT(user=fnc.nick_with_link('Օգտատերը', user_id), user_id=user_id)}\n\n{message.text}", parse_mode=types.ParseMode.MARKDOWN)
-            await message.answer(cfg.support_user_send_sup_text)
+            await message.answer(cfg.support_user_send_sup_text, reply_markup=markup)
+            await state.finish()
         elif message.photo:
             if message.caption:
                 await bot.send_photo(cfg.supports_group_tag, caption=f"{cfg.USER_SEND_TASK_TEXT(user=fnc.nick_with_link('Օգտատերը', user_id), user_id=user_id)}\n\n{message.caption}", photo=message.photo[0].file_id, parse_mode=types.ParseMode.MARKDOWN)
-                await message.answer(cfg.support_user_send_sup_text)
+                await message.answer(cfg.support_user_send_sup_text, reply_markup=markup)
+                await state.finish()
             else:
                 await bot.send_photo(cfg.supports_group_tag, caption=f"{cfg.USER_SEND_TASK_PHOTO_TEXT(user=fnc.nick_with_link('Օգտատերը', user_id), user_id=user_id)}", photo=message.photo[0].file_id, parse_mode=types.ParseMode.MARKDOWN)
-                await message.answer(cfg.support_user_send_sup_text)
+                await message.answer(cfg.support_user_send_sup_text, reply_markup=markup)
+                await state.finish()
         else:
             await message.answer(cfg.support_user_send_sup_error)
 
