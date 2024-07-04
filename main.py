@@ -13,7 +13,7 @@ import re
 
 bot = Bot(token=cfg.BOT_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
-db = Data("195.54.178.243", "5432", "anonbas", "postgres", "alexman014")
+db = Data("195.54.178.243", "22371", "anonbas", "postgres", "alexman014")
 logging.basicConfig(level=logging.INFO)
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
