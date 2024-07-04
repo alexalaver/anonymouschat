@@ -419,9 +419,8 @@ async def buttons_accept_and_cancel_func(callback_query):
 #################################### SUPPORTS FUNCS
 
 async def supports_button_func(message):
-    markup = buttons.BackButton()
+    markup = buttons.HelperButton()
     await message.answer(cfg.supports_button_text, reply_markup=markup)
-    await FORMSTATE.supports_1.set()
 
 async def supports_user_send_support_func(message, state):
     user_id = message.from_user.id

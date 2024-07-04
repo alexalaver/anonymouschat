@@ -57,3 +57,10 @@ def ConfirmOrderButtons(callback_data, sum, day):
     btn2 = InlineKeyboardButton(text="Չեղարկել", callback_data=f"cancel:{callback_data}")
     markup.add(btn1, btn2)
     return markup
+
+def HelperButton():
+    markup = InlineKeyboardMarkup(row_width=1)
+    markup.add(
+        InlineKeyboardButton(text="Սեղմեք", url=cfg.helper_link)
+    )
+    return markup
