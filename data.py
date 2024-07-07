@@ -209,3 +209,22 @@ class Data:
         with self.connect:
             self.cursor.execute("UPDATE users SET tarife=%s WHERE user_id=%s", (tarife, user_id,))
             self.connect.commit()
+
+    def select_channels(self):
+        with self.connect:
+            self.cursor.execute("SELECT channel FROM channels")
+            channel = self.cursor.fetchone
+            if channel is None:
+                return None
+            else:
+                return channel[0]
+
+    def update_channels(self, channel):
+        with self.connect:
+            self.cursor.execute("UPDATE channels SET channel=%s", (channel,))
+            self.connect.commit()
+
+    def select_adminka(self, user_id):
+        with self.connect:
+            self.cursor.execute("SELECT user_id FROM users WHERE user_id=%s", (user_id,))
+            return self.cursor.fetchone()[0]

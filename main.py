@@ -186,11 +186,28 @@ async def next_command_func(message):
                     if user_second == False:
                         if gender == "male":
                             db.add_queue_male(user_id)
+                            await message.answer(cfg.queue_wait_man_text, reply_markup=cancel_button)
                         elif gender == "female":
                             db.add_queue_female(user_id)
+                            await message.answer(cfg.queue_wait_girl_text, reply_markup=cancel_button)
                         else:
-                            db.add_queue_all(user_id)
-                        await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
+                            channels = db.select_channels()
+                            new_channels = []
+                            for channel in channels:
+                                if await check_if_admin(channel):
+                                    if await check_if_member(channel, user_id):
+                                        pass
+                                    else:
+                                        new_channels.append(channel)
+                            if new_channels == []:
+                                db.add_queue_all(user_id)
+                                await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
+                            else:
+                                not_sub_text = cfg.not_subscribe_channels
+                                for chan in new_channels:
+                                    not_sub_text = not_sub_text + "\n\n" + chan
+                                markup_start = buttons.menu_buttons()
+                                await message.answer(not_sub_text, reply_markup=markup_start)
                     else:
                         if drop == 3:
                             db.delete_queue(user_second)
@@ -548,6 +565,47 @@ async def reg_2_text(message: types.Message):
     await message.answer(cfg.select_gender_2_text, reply_markup=markup)
 
 ########################## REGISTER IN THE BOT FUNC
+
+######################### ADD CHANNELS FUNC
+
+async def check_if_admin(channel: str) -> bool:
+    try:
+        admins = await bot.get_chat_administrators(channel)
+        for admin in admins:
+            if admin.user.id == bot.id:
+                return True
+        return False
+    except Exception as e:
+        print(f"Error checking admin status in {channel}: {e}")
+        return False
+
+async def check_if_member(channel: str, user_id: int) -> bool:
+    try:
+        member = await bot.get_chat_member(channel, user_id)
+        return member.status != types.ChatMemberStatus.LEFT
+    except Exception as e:
+        print(f"Error checking membership status in {channel} for user {user_id}: {e}")
+        return False
+
+async def add_channels_command_func(message: types.Message):
+    message_text = message.text.split()
+    message_id = message.from_user.id
+    adminka = db.select_adminka(message_id)
+    if adminka == 1:
+        if len(message_text) == 2:
+            channels = db.select_channels()
+            if channels is None:
+                channels = [message_text[1]]
+                db.update_channels(channels)
+                await message.answer(cfg.add_channels_correct_text)
+            else:
+                channels.append(message_text[1])
+                db.update_channels(channels)
+                await message.answer(cfg.add_channels_correct_text)
+        else:
+            await message.answer(cfg.add_channels_incorrect_text)
+
+######################### ADD CHANNELS FUNC
 
 @dp.callback_query_handler()
 async def all_callback(callback_query: types.CallbackQuery, state: FSMContext):

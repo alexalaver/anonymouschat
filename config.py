@@ -33,8 +33,11 @@ search_two_text = "💤 Դուք արդեն որոնման գործընթացո�
 
 have_companion_error = "💤 Դուք արդեն ունեք զրուցակից:"
 
-queue_wait_text = "⏱ Դուք ավելացվել եք հերթի մեջ, խնդրում ենք սպասել:"
+queue_wait_text = "⏱ Փնտրում ենք զրուցակից.."
+queue_wait_girl_text = "⏱ Փնտրում ենք աղջիկ զրուցակից..."
+queue_wait_man_text = "⏱ Փնտրում ենք տղա զրուցակից..."
 queue_wait_text_and_cancel = "⏱ Դուք չեղարկել եք զրուցակցի հետ զրույցը և ավելացվել եք հերթի մեջ, խնդրում ենք սպասել:"
+not_subscribe_channels = "👤 Հարգելի օգտատեր, դուք պետք է բաժանորդագրվեք ստորև նշված ալիքներին: 👇🏻"
 
 companion_right_text = """Գտնվել է զրուցակիցը 🦊\n\n/next - որոնել նոր զրուցակից\n/stop - ավարտել զրույցը\n/link - ուղարկել ձեր telegram-ը\n\n`https://t.me/AnonChatARM_bot`"""
 
@@ -126,3 +129,6 @@ def send_your_link_text_2(link):
     return f"{link} հղում է ուղարկել իր տելեգրամ ակկաունտի։"
 
 helper_link = "https://t.me/HelperAnonArm"
+
+add_channels_correct_text = "✔ Դուք հաջողությամբ ալիք եք ավելացրել:"
+add_channels_incorrect_text = "❌ format /add 'link channel'"
