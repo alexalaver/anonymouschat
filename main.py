@@ -614,7 +614,7 @@ async def check_if_member(channel: str, user_id: int) -> bool:
         print(f"Error checking membership status in {channel} for user {user_id}: {e}")
         return False
 
-async def add_channels_command_func(message: types.Message):
+async def add_channels_command_func(message):
     message_text = message.text.split()
     message_id = message.from_user.id
     adminka = db.select_adminka(message_id)
@@ -667,6 +667,8 @@ async def text_all(message: types.Message):
                     await start_command(message)
                 elif message.text == "/next":
                     await next_command_func(message)
+                elif message.text == "/add":
+                    await add_channels_command_func(message)
                 elif message.text == cfg.female_button:
                     await search_gender(message, "female")
                 elif message.text == cfg.male_button:
