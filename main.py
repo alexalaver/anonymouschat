@@ -42,7 +42,6 @@ async def search_all_button(message):
                     await message.answer(cfg.have_companion_error)
                 else:
                     channels = db.select_channels()
-                    print(channels)
                     new_channels = []
                     for channel in channels:
                         if await check_if_admin(channel):

@@ -213,11 +213,11 @@ class Data:
     def select_channels(self):
         with self.connect:
             self.cursor.execute("SELECT channel FROM channels")
-            channel = self.cursor.fetchone
+            channel = self.cursor.fetchone()
             if channel is None:
                 return None
             else:
-                return channel
+                return channel[0]
 
     def update_channels(self, channel):
         with self.connect:
