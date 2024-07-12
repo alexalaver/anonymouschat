@@ -226,5 +226,5 @@ class Data:
 
     def select_adminka(self, user_id):
         with self.connect:
-            self.cursor.execute("SELECT user_id FROM users WHERE user_id=%s", (user_id,))
+            self.cursor.execute("SELECT adminka FROM users WHERE user_id=%s", (user_id,))
             return self.cursor.fetchone()[0]
