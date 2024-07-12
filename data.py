@@ -224,6 +224,11 @@ class Data:
             self.cursor.execute("UPDATE channels SET channel=%s", (channel,))
             self.connect.commit()
 
+    def add_channels(self, channel):
+        with self.connect:
+            self.cursor.execute("INSERT INTO channels(channel) VALUES(%s)", (channel,))
+            self.connect.commit()
+
     def select_adminka(self, user_id):
         with self.connect:
             self.cursor.execute("SELECT adminka FROM users WHERE user_id=%s", (user_id,))

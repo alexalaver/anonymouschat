@@ -624,8 +624,7 @@ async def add_channels_command_func(message):
             if channels is None:
                 channels = []
                 channels.append(message_text[1])
-                print(channels)
-                db.update_channels(channels)
+                db.add_channels(channels)
                 await message.answer(cfg.add_channels_correct_text)
             else:
                 channels.append(message_text[1])
