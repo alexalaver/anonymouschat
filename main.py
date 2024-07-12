@@ -600,7 +600,9 @@ async def reg_2_text(message: types.Message):
 
 async def check_if_admin(channel: str) -> bool:
     try:
-        admins = await bot.get_chat_administrators(channel)
+        # Используйте имя канала без префикса URL
+        channel_name = channel.replace("https://t.me/", "").replace("@", "")
+        admins = await bot.get_chat_administrators(channel_name)
         for admin in admins:
             if admin.user.id == bot.id:
                 return True
@@ -611,7 +613,9 @@ async def check_if_admin(channel: str) -> bool:
 
 async def check_if_member(channel: str, user_id: int) -> bool:
     try:
-        member = await bot.get_chat_member(channel, user_id)
+        # Используйте имя канала без префикса URL
+        channel_name = channel.replace("https://t.me/", "").replace("@", "")
+        member = await bot.get_chat_member(channel_name, user_id)
         return member.status != types.ChatMemberStatus.LEFT
     except Exception as e:
         print(f"Error checking membership status in {channel} for user {user_id}: {e}")
