@@ -660,8 +660,6 @@ async def text_all(message: types.Message):
                     await stop_command(message)
                 else:
                     await message.answer(cfg.queue_error_commands)
-            elif message.text == "/add":
-                await add_channels_command_func(message)
             elif user_second == False:
                 if message.text == cfg.search_all_button or message.text == "/search":
                     await search_all_button(message)
@@ -669,6 +667,8 @@ async def text_all(message: types.Message):
                     await start_command(message)
                 elif message.text == "/next":
                     await next_command_func(message)
+                elif message.text[:4] == "/add":
+                    await add_channels_command_func(message)
                 elif message.text == cfg.female_button:
                     await search_gender(message, "female")
                 elif message.text == cfg.male_button:
