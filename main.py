@@ -43,12 +43,15 @@ async def search_all_button(message):
                 else:
                     channels = db.select_channels()
                     new_channels = []
-                    for channel in channels:
-                        if await check_if_admin(channel):
-                            if await check_if_member(channel, user_id):
-                                pass
-                            else:
-                                new_channels.append(channel)
+                    if channels is None:
+                        pass
+                    else:
+                        for channel in channels:
+                            if await check_if_admin(channel):
+                                if await check_if_member(channel, user_id):
+                                    pass
+                                else:
+                                    new_channels.append(channel)
                     if new_channels == []:
                         user_second = False
                         drop = None
@@ -154,12 +157,15 @@ async def next_command_func(message):
             else:
                 channels = db.select_channels()
                 new_channels = []
-                for channel in channels:
-                    if await check_if_admin(channel):
-                        if await check_if_member(channel, user_id):
-                            pass
-                        else:
-                            new_channels.append(channel)
+                if channels is None:
+                    pass
+                else:
+                    for channel in channels:
+                        if await check_if_admin(channel):
+                            if await check_if_member(channel, user_id):
+                                pass
+                            else:
+                                new_channels.append(channel)
                 if new_channels == []:
                     if db.get_active_chat(user_id):
                         user_second_right = db.get_active_chat_second(user_id)
