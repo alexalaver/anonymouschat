@@ -598,14 +598,23 @@ async def reg_2_text(message: types.Message):
 
 ######################### ADD CHANNELS FUNC
 
-async def check_if_admin(channel: str) -> bool:
+async def get_channel_id(channel: str) -> int:
     try:
         # Используйте имя канала без префикса URL
         channel_name = channel.replace("https://t.me/", "").replace("@", "")
-        admins = await bot.get_chat_administrators(channel_name)
-        for admin in admins:
-            if admin.user.id == bot.id:
-                return True
+        chat = await bot.get_chat(channel_name)
+        return chat.id
+    except Exception as e:
+        print(f"Error getting channel ID for {channel}: {e}")
+
+async def check_if_admin(channel: str) -> bool:
+    try:
+        channel_id = await get_channel_id(channel)
+        if channel_id:
+            admins = await bot.get_chat_administrators(channel_id)
+            for admin in admins:
+                if admin.user.id == bot.id:
+                    return True
         return False
     except Exception as e:
         print(f"Error checking admin status in {channel}: {e}")
@@ -613,10 +622,11 @@ async def check_if_admin(channel: str) -> bool:
 
 async def check_if_member(channel: str, user_id: int) -> bool:
     try:
-        # Используйте имя канала без префикса URL
-        channel_name = channel.replace("https://t.me/", "").replace("@", "")
-        member = await bot.get_chat_member(channel_name, user_id)
-        return member.status != types.ChatMemberStatus.LEFT
+        channel_id = await get_channel_id(channel)
+        if channel_id:
+            member = await bot.get_chat_member(channel_id, user_id)
+            return member.status != types.ChatMemberStatus.LEFT
+        return False
     except Exception as e:
         print(f"Error checking membership status in {channel} for user {user_id}: {e}")
         return False
