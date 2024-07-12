@@ -618,6 +618,8 @@ async def add_channels_command_func(message):
     message_text = message.text.split()
     message_id = message.from_user.id
     adminka = db.select_adminka(message_id)
+    print(message_text)
+    print(adminka)
     if adminka == 1:
         if len(message_text) == 2:
             channels = db.select_channels()
