@@ -605,7 +605,7 @@ async def get_chat_id(channel: str) -> int:
         chat = await bot.get_chat(channel_name)
         return chat.id
     except Exception as e:
-        print(f"Error getting chat ID for {channel}: {e}")
+        logging.error(f"Error getting chat ID for {channel}: {e}")
         return None
 
 async def check_if_admin(channel: str) -> bool:
@@ -618,7 +618,7 @@ async def check_if_admin(channel: str) -> bool:
                     return True
         return False
     except Exception as e:
-        print(f"Error checking admin status in {channel}: {e}")
+        logging.error(f"Error checking admin status in {channel}: {e}")
         return False
 
 async def check_if_member(channel: str, user_id: int) -> bool:
@@ -629,7 +629,7 @@ async def check_if_member(channel: str, user_id: int) -> bool:
             return member.status != types.ChatMemberStatus.LEFT
         return False
     except Exception as e:
-        print(f"Error checking membership status in {channel} for user {user_id}: {e}")
+        logging.error(f"Error checking membership status in {channel} for user {user_id}: {e}")
         return False
 
 async def add_channels_command_func(message):
