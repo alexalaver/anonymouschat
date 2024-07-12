@@ -598,7 +598,9 @@ async def reg_2_text(message: types.Message):
 async def get_chat_info(channel: str):
     try:
         channel_name = channel.replace("https://t.me/", "").replace("@", "")
+        print(f"channel_name: {channel_name}")
         chat = await bot.get_chat(channel_name)
+        print(chat)
         logging.info(f"Chat ID: {chat.id}, Chat Title: {chat.title}")
         return chat
     except Exception as e:
