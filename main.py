@@ -47,14 +47,11 @@ async def search_all_button(message):
                         pass
                     else:
                         for channel in channels:
-                            print(f"channel: {channel}")
                             if await check_if_admin(channel):
                                 if await check_if_member(channel, user_id):
                                     pass
                                 else:
                                     new_channels.append(channel)
-                    print(new_channels)
-                    print(channels)
                     if new_channels == []:
                         user_second = False
                         drop = None
@@ -598,31 +595,40 @@ async def reg_2_text(message: types.Message):
 
 ######################### ADD CHANNELS FUNC
 
-async def get_chat_info(message: types.Message):
+async def get_chat_info(channel: str):
     try:
-        channel = message.text.split()[1]
-        chat = await bot.get_chat(channel)
-        await message.reply(f"Chat ID: {chat.id}\nChat Title: {chat.title}")
+        channel_name = channel.replace("https://t.me/", "").replace("@", "")
+        chat = await bot.get_chat(channel_name)
+        logging.info(f"Chat ID: {chat.id}, Chat Title: {chat.title}")
+        return chat
     except Exception as e:
-        await message.reply(f"Error: {e}")
+        logging.error(f"Error getting chat info for {channel}: {e}")
+        return None
 
-async def check_if_admin(channel_id: int) -> bool:
+async def check_if_admin(channel: str) -> bool:
     try:
-        admins = await bot.get_chat_administrators(channel_id)
-        for admin in admins:
-            if admin.user.id == bot.id:
-                return True
+        chat = await get_chat_info(channel)
+        print(chat)
+        if chat:
+            admins = await bot.get_chat_administrators(chat.id)
+            print(admins)
+            for admin in admins:
+                if admin.user.id == bot.id:
+                    return True
         return False
     except Exception as e:
-        print(f"Error checking admin status in {channel_id}: {e}")
+        logging.error(f"Error checking admin status in {channel}: {e}")
         return False
 
-async def check_if_member(channel_id: int, user_id: int) -> bool:
+async def check_if_member(channel: str, user_id: int) -> bool:
     try:
-        member = await bot.get_chat_member(channel_id, user_id)
-        return member.status != types.ChatMemberStatus.LEFT
+        chat = await get_chat_info(channel)
+        if chat:
+            member = await bot.get_chat_member(chat.id, user_id)
+            return member.status != types.ChatMemberStatus.LEFT
+        return False
     except Exception as e:
-        print(f"Error checking membership status in {channel_id} for user {user_id}: {e}")
+        logging.error(f"Error checking membership status in {channel} for user {user_id}: {e}")
         return False
 
 async def add_channels_command_func(message):
