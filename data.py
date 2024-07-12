@@ -217,8 +217,7 @@ class Data:
             if channel is None:
                 return None
             else:
-                print(channel)
-                return channel[0]
+                return channel
 
     def update_channels(self, channel):
         with self.connect:
