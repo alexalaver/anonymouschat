@@ -598,38 +598,31 @@ async def reg_2_text(message: types.Message):
 
 ######################### ADD CHANNELS FUNC
 
-async def get_chat_id(channel: str) -> int:
+async def get_chat_info(message: types.Message):
     try:
-        # Удаление префиксов и получение информации о чате
-        channel_name = channel.replace("https://t.me/", "").replace("@", "")
-        chat = await bot.get_chat(channel_name)
-        return chat.id
+        channel = message.text.split()[1]
+        chat = await bot.get_chat(channel)
+        await message.reply(f"Chat ID: {chat.id}\nChat Title: {chat.title}")
     except Exception as e:
-        logging.error(f"Error getting chat ID for {channel}: {e}")
-        return None
+        await message.reply(f"Error: {e}")
 
-async def check_if_admin(channel: str) -> bool:
+async def check_if_admin(channel_id: int) -> bool:
     try:
-        channel_id = await get_chat_id(channel)
-        if channel_id:
-            admins = await bot.get_chat_administrators(channel_id)
-            for admin in admins:
-                if admin.user.id == bot.id:
-                    return True
+        admins = await bot.get_chat_administrators(channel_id)
+        for admin in admins:
+            if admin.user.id == bot.id:
+                return True
         return False
     except Exception as e:
-        logging.error(f"Error checking admin status in {channel}: {e}")
+        print(f"Error checking admin status in {channel_id}: {e}")
         return False
 
-async def check_if_member(channel: str, user_id: int) -> bool:
+async def check_if_member(channel_id: int, user_id: int) -> bool:
     try:
-        channel_id = await get_chat_id(channel)
-        if channel_id:
-            member = await bot.get_chat_member(channel_id, user_id)
-            return member.status != types.ChatMemberStatus.LEFT
-        return False
+        member = await bot.get_chat_member(channel_id, user_id)
+        return member.status != types.ChatMemberStatus.LEFT
     except Exception as e:
-        logging.error(f"Error checking membership status in {channel} for user {user_id}: {e}")
+        print(f"Error checking membership status in {channel_id} for user {user_id}: {e}")
         return False
 
 async def add_channels_command_func(message):
