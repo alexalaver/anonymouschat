@@ -47,11 +47,14 @@ async def search_all_button(message):
                         pass
                     else:
                         for channel in channels:
+                            print(f"channel: {channel}")
                             if await check_if_admin(channel):
                                 if await check_if_member(channel, user_id):
                                     pass
                                 else:
                                     new_channels.append(channel)
+                    print(new_channels)
+                    print(channels)
                     if new_channels == []:
                         user_second = False
                         drop = None
