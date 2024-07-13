@@ -67,6 +67,8 @@ def HelperButton():
 
 def MarkupsLink(channels):
     markup = InlineKeyboardMarkup(row_width=1)
-    for channel, i in channels, range(len(channels) + 1):
-        markup.add(InlineKeyboardButton(text=f"{i} {cfg.channel_range}", url=channel))
+    num = 1
+    for channel in channels:
+        markup.add(InlineKeyboardButton(text=f"{num} {cfg.channel_range}", url=channel))
+        num += 1
     return markup
