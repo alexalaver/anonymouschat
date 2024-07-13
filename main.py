@@ -625,7 +625,6 @@ async def check_if_admin(channel: str) -> bool:
 
 async def get_chat_info_and_check_membership(channel_link, user_id):
     try:
-        # Проверяем существование канала
         channel_link.replace("https://t.me/", "").replace("@", "")
 
         # Проверяем, является ли пользователь участником канала
