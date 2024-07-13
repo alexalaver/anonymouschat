@@ -238,5 +238,5 @@ class Data:
         with self.connect:
             self.cursor.execute("SELECT user_id FROM users")
             users = self.cursor.fetchall()
-            users = [i for i in users]
+            users = [i[0] for i in users]
             return users
