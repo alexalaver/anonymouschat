@@ -136,3 +136,5 @@ add_channels_incorrect_text = "❌ format /add 'link channel'"
 in_job_text = "💤 Այս ֆունկցիան մշակման փուլում է:"
 
 channel_range = "Ալիք 📺"
+
+stop_conversation_text_error = "💤 Զրույցն ավարտված է։"

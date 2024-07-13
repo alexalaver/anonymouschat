@@ -151,139 +151,137 @@ async def next_command_func(message):
             if db.check_queue(user_id) or db.check_queue_male(user_id) or db.check_queue_female(user_id):
                 await message.answer(cfg.search_two_text)
             else:
-                # channels = db.select_channels()
-                # new_channels = []
-                # if channels is None:
-                #     pass
-                # else:
-                #     for channel in channels:
-                #         if await check_if_admin(channel):
-                #             if await check_if_member(channel, user_id):
-                #                 pass
-                #             else:
-                #                 new_channels.append(channel)
-                # if new_channels == []:
-                if db.get_active_chat(user_id):
-                    user_second_right = db.get_active_chat_second(user_id)
-                    markup = buttons.menu_buttons()
-                    await dp.bot.send_message(chat_id=user_second_right, text=cfg.stop_conversation_second_text, reply_markup=markup)
-                    gender = None
-                    get_full_chats = db.get_full_chats_info(user_id)
-                    if get_full_chats[1] == user_id:
-                        gender = get_full_chats[3]
-                    else:
-                        gender = get_full_chats[4]
-                    db.delete_chats(user_id)
-                    user_second = False
-                    drop = None
-                    gender_second = None
-                    user_first_gender = db.select_gender_users(user_id)
-                    if gender == "male":
-                        user_second = db.get_user_queue_male()
-                        if user_second != False:
-                            user_second_gender = db.select_gender_users(user_second)
-                            if user_second_gender == gender and user_first_gender == "male":
-                                drop = 1
-                                gender_second = user_second_gender
-                            else:
-                                user_second = False
-                    elif gender == "female":
-                        user_second = db.get_user_queue_female()
-                        if user_second != False:
-                            user_second_gender = db.select_gender_users(user_second)
-                            if user_second_gender == gender and user_first_gender == "male":
-                                drop = 2
-                                gender_second = user_second_gender
-                            else:
-                                user_second = False
-                    if user_second == False:
-                        user_second = db.get_user_queue()
-                        if user_second == False:
-                            pass
-                        else:
-                            user_second_gender = db.select_gender_users(user_second)
-                            if gender is None:
-                                pass
-                            elif user_second_gender == gender:
-                                drop = 3
-                                gender_second = None
-                            else:
-                                user_second = False
-                    cancel_button = buttons.CancelButton()
-                    if user_second == False:
-                        if gender == "male":
-                            db.add_queue_male(user_id)
-                            await message.answer(cfg.queue_wait_man_text, reply_markup=cancel_button)
-                        elif gender == "female":
-                            db.add_queue_female(user_id)
-                            await message.answer(cfg.queue_wait_girl_text, reply_markup=cancel_button)
-                        else:
-                            db.add_queue_all(user_id)
-                            await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
-                    else:
-                        if drop == 3:
-                            db.delete_queue(user_second)
-                        elif drop == 2:
-                            db.delete_queue_female(user_second)
-                        elif drop == 1:
-                            db.delete_queue_male(user_second)
-                        id_chats = db.check_numbers_id_chat()
-                        id_chats += 1
-                        db.create_chat_all(id_chats, user_id, user_second, gender, gender_second)
-                        await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                        await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                channels = db.select_channels()
+                new_channels = []
+                if channels is None:
+                    pass
                 else:
-                    user_second = False
-                    drop = None
-                    gender_user = db.select_gender_users(user_id)
-                    if gender_user == "male":
-                        user_second = db.get_user_queue_male()
-                        drop = 1
-                    elif gender_user == "female":
-                        user_second = db.get_user_queue_female()
-                        drop = 2
-                    if user_second == False:
-                        user_second = db.get_user_queue()
-                        drop = 3
-                    cancel_button = buttons.CancelButton()
-                    if user_second == False:
-                        db.add_queue_all(user_id)
-                        await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
-                    else:
-                        try:
-                            search_gender_first = None
-                            search_gender_second = None
+                    for channel in channels:
+                        if await get_chat_info_and_check_membership(channel, user_id) is True:
+                            pass
+                        elif await get_chat_info_and_check_membership(channel, user_id) is False:
+                            new_channels.append(channel)
+                if new_channels == []:
+                    if db.get_active_chat(user_id):
+                        user_second_right = db.get_active_chat_second(user_id)
+                        markup = buttons.menu_buttons()
+                        await dp.bot.send_message(chat_id=user_second_right, text=cfg.stop_conversation_second_text, reply_markup=markup)
+                        gender = None
+                        get_full_chats = db.get_full_chats_info(user_id)
+                        if get_full_chats[1] == user_id:
+                            gender = get_full_chats[3]
+                        else:
+                            gender = get_full_chats[4]
+                        db.delete_chats(user_id)
+                        user_second = False
+                        drop = None
+                        gender_second = None
+                        user_first_gender = db.select_gender_users(user_id)
+                        if gender == "male":
+                            user_second = db.get_user_queue_male()
+                            if user_second != False:
+                                user_second_gender = db.select_gender_users(user_second)
+                                if user_second_gender == gender and user_first_gender == "male":
+                                    drop = 1
+                                    gender_second = user_second_gender
+                                else:
+                                    user_second = False
+                        elif gender == "female":
+                            user_second = db.get_user_queue_female()
+                            if user_second != False:
+                                user_second_gender = db.select_gender_users(user_second)
+                                if user_second_gender == gender and user_first_gender == "male":
+                                    drop = 2
+                                    gender_second = user_second_gender
+                                else:
+                                    user_second = False
+                        if user_second == False:
+                            user_second = db.get_user_queue()
+                            if user_second == False:
+                                pass
+                            else:
+                                user_second_gender = db.select_gender_users(user_second)
+                                if gender is None:
+                                    pass
+                                elif user_second_gender == gender:
+                                    drop = 3
+                                    gender_second = None
+                                else:
+                                    user_second = False
+                        cancel_button = buttons.CancelButton()
+                        if user_second == False:
+                            if gender == "male":
+                                db.add_queue_male(user_id)
+                                await message.answer(cfg.queue_wait_man_text, reply_markup=cancel_button)
+                            elif gender == "female":
+                                db.add_queue_female(user_id)
+                                await message.answer(cfg.queue_wait_girl_text, reply_markup=cancel_button)
+                            else:
+                                db.add_queue_all(user_id)
+                                await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
+                        else:
                             if drop == 3:
                                 db.delete_queue(user_second)
-                                print('right 1')
                             elif drop == 2:
                                 db.delete_queue_female(user_second)
-                                search_gender_second = "female"
-                                print('right 2')
                             elif drop == 1:
                                 db.delete_queue_male(user_second)
-                                search_gender_second = "male"
-                                print('right 3')
-                            print('right 4')
                             id_chats = db.check_numbers_id_chat()
                             id_chats += 1
-                            db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second)
+                            db.create_chat_all(id_chats, user_id, user_second, gender, gender_second)
                             await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                             await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                        except BotBlocked:
-                            db.delete_chats(user_id)
-                            await message.answer(cfg.message_send_blocked_error)
-                # else:
-                #     not_sub_text = cfg.not_subscribe_channels
-                #     for chan in new_channels:
-                #         not_sub_text = not_sub_text + "\n\n" + chan
-                #     markup_start = buttons.menu_buttons()
-                #     await message.answer(not_sub_text, reply_markup=markup_start)
-                #     if db.get_active_chat(user_id):
-                #         markup = buttons.menu_buttons()
-                #         user_second_right = db.get_active_chat_second(user_id)
-                #         db.delete_chats(user_id)
-                #         await dp.bot.send_message(chat_id=user_second_right, text=cfg.stop_conversation_second_text, reply_markup=markup)
+                    else:
+                        user_second = False
+                        drop = None
+                        gender_user = db.select_gender_users(user_id)
+                        if gender_user == "male":
+                            user_second = db.get_user_queue_male()
+                            drop = 1
+                        elif gender_user == "female":
+                            user_second = db.get_user_queue_female()
+                            drop = 2
+                        if user_second == False:
+                            user_second = db.get_user_queue()
+                            drop = 3
+                        cancel_button = buttons.CancelButton()
+                        if user_second == False:
+                            db.add_queue_all(user_id)
+                            await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
+                        else:
+                            try:
+                                search_gender_first = None
+                                search_gender_second = None
+                                if drop == 3:
+                                    db.delete_queue(user_second)
+                                    print('right 1')
+                                elif drop == 2:
+                                    db.delete_queue_female(user_second)
+                                    search_gender_second = "female"
+                                    print('right 2')
+                                elif drop == 1:
+                                    db.delete_queue_male(user_second)
+                                    search_gender_second = "male"
+                                    print('right 3')
+                                print('right 4')
+                                id_chats = db.check_numbers_id_chat()
+                                id_chats += 1
+                                db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second)
+                                await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                                await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                            except BotBlocked:
+                                db.delete_chats(user_id)
+                                await message.answer(cfg.message_send_blocked_error)
+                else:
+                    markup = buttons.MarkupsLink(new_channels)
+                    markup_start = buttons.menu_buttons()
+                    await message.answer(cfg.stop_conversation_text_error, reply_markup=markup_start)
+                    await message.answer(cfg.not_subscribe_channels, reply_markup=markup)
+                    if db.get_active_chat(user_id):
+                        markup = buttons.menu_buttons()
+                        user_second_right = db.get_active_chat_second(user_id)
+                        db.delete_chats(user_id)
+                        await dp.bot.send_message(chat_id=user_second_right, text=cfg.stop_conversation_second_text, reply_markup=markup)
 
 
 ####################################### NEXT COMMAND FUNC
@@ -591,41 +589,12 @@ async def reg_2_text(message: types.Message):
 
 ######################### ADD CHANNELS FUNC
 
-async def get_chat_info(channel):
-    try:
-        channel_name = channel.replace("https://t.me/", "").replace("@", "")
-        print(f"channel_name: {channel_name}")
-        chat = await bot.get_chat(channel_name)
-        print(chat)
-        logging.info(f"Chat ID: {chat.id}, Chat Title: {chat.title}")
-        return chat
-    except Exception as e:
-        logging.error(f"Error getting chat info for {channel}: {e}")
-        return None
-
-async def check_if_admin(channel: str) -> bool:
-    try:
-        chat = await get_chat_info(channel)
-        print(chat)
-        if chat:
-            admins = await bot.get_chat_administrators(chat.id)
-            print(admins)
-            for admin in admins:
-                if admin.user.id == bot.id:
-                    return True
-        return False
-    except Exception as e:
-        logging.error(f"Error checking admin status in {channel}: {e}")
-        return False
-
 
 async def get_chat_info_and_check_membership(channel_link, user_id):
     try:
         new_link = channel_link.replace("https://t.me/", "").replace("@", "")
 
-        print(new_link)
         member = await bot.get_chat_member(f"@{new_link}", user_id)
-        # Проверяем статус пользователя
         if member.status in ['member', 'administrator', 'creator']:
             return True
         else:
