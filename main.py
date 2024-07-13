@@ -47,7 +47,7 @@ async def search_all_button(message):
                         pass
                     else:
                         for channel in channels:
-                            if await check_if_member(channel, user_id) is True:
+                            if await check_channel_and_membership(channel, user_id) is True:
                                 pass
                             else:
                                 new_channels.append(channel)
@@ -621,17 +621,21 @@ async def check_if_admin(channel: str) -> bool:
         logging.error(f"Error checking admin status in {channel}: {e}")
         return False
 
-async def check_if_member(channel, user_id):
+
+async def check_channel_and_membership(channel_link: str, user_id: int) -> bool:
     try:
-        status = ["creator", "administrator", "member"]
-        for i in status:
-            chat = await bot.get_chat(channel)
-            if i == bot.get_chat_member(chat_id=chat.id, user_id=user_id).status:
-                return True
-            else:
-                return False
+        # Проверяем существование канала
+        chat = await bot.get_chat(channel_link)
+
+        # Проверяем, является ли пользователь участником канала
+        member = await bot.get_chat_member(chat.id, user_id)
+        # Проверяем статус пользователя
+        if member.status in ['member', 'administrator', 'creator']:
+            return True
+        else:
+            return False
     except Exception as e:
-        logging.error(f"Error checking membership status in {channel} for user {user_id}: {e}")
+        print(f"Error: {e}")
         return False
 
 async def add_channels_command_func(message):
