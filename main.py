@@ -41,18 +41,18 @@ async def search_all_button(message):
                 if db.get_active_chat(user_id):
                     await message.answer(cfg.have_companion_error)
                 else:
-                    # channels = db.select_channels()
-                    # new_channels = []
-                    # if channels is None:
-                    #     pass
-                    # else:
-                    #     for channel in channels:
-                    #         print(f"channel: {channel}")
-                    #         if await get_chat_info_and_check_membership(channel, user_id) is True:
-                    #             pass
-                    #         else:
-                    #             new_channels.append(channel)
-                    if await get_chat_info_and_check_membership(user_id) is True:
+                    channels = db.select_channels()
+                    new_channels = []
+                    if channels is None:
+                        pass
+                    else:
+                        for channel in channels:
+                            print(f"channel: {channel}")
+                            if await get_chat_info_and_check_membership(channel, user_id) is True:
+                                pass
+                            else:
+                                new_channels.append(channel)
+                    if new_channels == []:
                         user_second = False
                         drop = None
                         gender_user = db.select_gender_users(user_id)
@@ -623,13 +623,13 @@ async def check_if_admin(channel: str) -> bool:
         return False
 
 
-async def get_chat_info_and_check_membership(user_id):
+async def get_chat_info_and_check_membership(channel_link, user_id):
     try:
         # Проверяем существование канала
-        # chat = await bot.get_chat(channel_link.replace("https://t.me/", "").replace("@", ""))
+        channel_link.replace("https://t.me/", "").replace("@", "")
 
         # Проверяем, является ли пользователь участником канала
-        member = await bot.get_chat_member("@AnonArm", user_id)
+        member = await bot.get_chat_member(f"@{channel_link}", user_id)
         # Проверяем статус пользователя
         if member.status in ['member', 'administrator', 'creator']:
             return True
