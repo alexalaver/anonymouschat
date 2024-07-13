@@ -731,29 +731,29 @@ async def text_all(message: types.Message):
                         elif message.text not in cfg.commands_forbid_conversation:
                             await dp.bot.send_message(chat_id=user_second, text=message.text)
                             channel_message_text = db.get_active_chat_all(user_id)
-                            channel_mes_text = f"ID чата - {channel_message_text[0]}\nИдентификатор чата{channel_message_text[5]}\nПользователь 1 - {channel_message_text[1]}\nПользователь 2', {channel_message_text[1]}\n\n{message.text}"
+                            channel_mes_text = f"ID чата: {channel_message_text[0]}\nИдентификатор чата: {channel_message_text[5]}\nПользователь 1: {channel_message_text[1]}\nПользователь 2: {channel_message_text[1]}\n\n{message.text}"
                             await dp.bot.send_message(chat_id=cfg.channel_messages, text=channel_mes_text)
                     elif message.photo:
                         if message.caption:
                             await dp.bot.send_photo(chat_id=user_second, photo=message.photo[-1].file_id, caption=message.caption)
                             channel_message_text = db.get_active_chat_all(user_id)
-                            channel_mes_text = f"ID чата - {channel_message_text[0]}\nИдентификатор чата{channel_message_text[5]}\nПользователь 1 - {channel_message_text[1]}\nПользователь 2', {channel_message_text[1]}\n\n{message.caption}"
+                            channel_mes_text = f"ID чата: {channel_message_text[0]}\nИдентификатор чата: {channel_message_text[5]}\nПользователь 1: {channel_message_text[1]}\nПользователь 2: {channel_message_text[1]}\n\n{message.caption}"
                             await dp.bot.send_photo(chat_id=cfg.channel_messages, photo=message.photo[-1].file_id, caption=channel_mes_text)
                         else:
                             await dp.bot.send_photo(chat_id=user_second, photo=message.photo[-1].file_id)
                             channel_message_text = db.get_active_chat_all(user_id)
-                            channel_mes_text = f"ID чата - {channel_message_text[0]}\nИдентификатор чата{channel_message_text[5]}\nПользователь 1 - {channel_message_text[1]}\nПользователь 2', {channel_message_text[1]}"
+                            channel_mes_text = f"ID чата: {channel_message_text[0]}\nИдентификатор чата: {channel_message_text[5]}\nПользователь 1: {channel_message_text[1]}\nПользователь 2: {channel_message_text[1]}"
                             await dp.bot.send_photo(chat_id=cfg.channel_messages, photo=message.photo[-1].file_id, caption=channel_mes_text)
                     elif message.video:
                         if message.caption:
                             await dp.bot.send_photo(chat_id=user_second, photo=message.video.file_id, caption=message.caption)
                             channel_message_text = db.get_active_chat_all(user_id)
-                            channel_mes_text = f"ID чата - {channel_message_text[0]}\nИдентификатор чата{channel_message_text[5]}\nПользователь 1 - {channel_message_text[1]}\nПользователь 2', {channel_message_text[1]}\n\n{message.caption}"
+                            channel_mes_text = f"ID чата: {channel_message_text[0]}\nИдентификатор чата: {channel_message_text[5]}\nПользователь 1: {channel_message_text[1]}\nПользователь 2: {channel_message_text[1]}\n\n{message.caption}"
                             await dp.bot.send_photo(chat_id=cfg.channel_messages, photo=message.video.file_id, caption=channel_mes_text)
                         else:
                             await dp.bot.send_photo(chat_id=user_second, photo=message.video.file_id)
                             channel_message_text = db.get_active_chat_all(user_id)
-                            channel_mes_text = f"ID чата - {channel_message_text[0]}\nИдентификатор чата{channel_message_text[5]}\nПользователь 1 - {channel_message_text[1]}\nПользователь 2', {channel_message_text[1]}\n\n"
+                            channel_mes_text = f"ID чата: {channel_message_text[0]}\nИдентификатор чата: {channel_message_text[5]}\nПользователь 1: {channel_message_text[1]}\nПользователь 2: {channel_message_text[1]}\n\n"
                             await dp.bot.send_photo(chat_id=cfg.channel_messages, photo=message.video.file_id, caption=channel_mes_text)
                     else:
                         await message.answer(cfg.message_send_second_error)
