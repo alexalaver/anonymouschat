@@ -651,7 +651,7 @@ async def command_send_all_2(message: types.Message, state: FSMContext):
         users = db.select_all_id()
         for user in users:
             try:
-                await bot.send_message(chat_id=user, text=f"‼ {message.text} ‼")
+                await bot.send_message(chat_id=user, text=f"{message.text}")
                 print("right send")
             except Exception as err:
                 print(f"blocket: {err}")
