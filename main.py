@@ -50,7 +50,7 @@ async def search_all_button(message):
                             print(f"channel: {channel}")
                             if await get_chat_info_and_check_membership(channel, user_id) is True:
                                 pass
-                            else:
+                            elif await get_chat_info_and_check_membership(channel, user_id) is False:
                                 new_channels.append(channel)
                     if new_channels == []:
                         user_second = False
@@ -635,10 +635,10 @@ async def get_chat_info_and_check_membership(channel_link, user_id):
         else:
             return False
     except ChatNotFound:
-        return False
+        return None
     except Exception as e:
         print(f"Error: {e}")
-        return False
+        return None
 
 async def add_channels_command_func(message):
     message_text = message.text.split()
