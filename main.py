@@ -1,5 +1,4 @@
 import asyncio
-
 from aiogram import Bot, Dispatcher, types, executor
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.storage import FSMContext
@@ -12,6 +11,7 @@ import logging
 import datetime
 import other_functions as fnc
 import re
+import uuid
 
 bot = Bot(token=cfg.BOT_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
@@ -85,7 +85,8 @@ async def search_all_button(message):
                                     search_gender_second = "male"
                                 id_chats = db.check_numbers_id_chat()
                                 id_chats += 1
-                                db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second)
+                                random_id = uuid.uuid4()
+                                db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second, random_id)
                                 await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                                 await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                             except BotBlocked:
@@ -231,7 +232,8 @@ async def next_command_func(message):
                                 db.delete_queue_male(user_second)
                             id_chats = db.check_numbers_id_chat()
                             id_chats += 1
-                            db.create_chat_all(id_chats, user_id, user_second, gender, gender_second)
+                            random_id = uuid.uuid4()
+                            db.create_chat_all(id_chats, user_id, user_second, gender, gender_second, random_id)
                             await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                             await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                     else:
@@ -269,7 +271,8 @@ async def next_command_func(message):
                                 print('right 4')
                                 id_chats = db.check_numbers_id_chat()
                                 id_chats += 1
-                                db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second)
+                                random_id = uuid.uuid4()
+                                db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second, random_id)
                                 await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                                 await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                             except BotBlocked:
@@ -366,7 +369,8 @@ async def search_gender(message, gender):
                                     db.delete_queue_male(user_second)
                                 id_chats = db.check_numbers_id_chat()
                                 id_chats += 1
-                                db.create_chat_all(id_chats, user_id, user_second, gender, gender_second)
+                                random_id = uuid.uuid4()
+                                db.create_chat_all(id_chats, user_id, user_second, gender, gender_second, random_id)
                                 await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                                 await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
 
@@ -649,7 +653,6 @@ async def command_send_all_2(message: types.Message, state: FSMContext):
         await message.answer(cfg.command_send_2_text, reply_markup=markup)
         await state.finish()
         users = db.select_all_id()
-        print(users)
         for user in users:
             try:
                 await bot.send_message(chat_id=user, text=f"‼ {message.text} ‼")
@@ -722,6 +725,8 @@ async def text_all(message: types.Message):
                             await link_command_func(message)
                         elif message.text not in cfg.commands_forbid_conversation:
                             await dp.bot.send_message(chat_id=user_second, text=message.text)
+                            channel_message_text = db.get_active_chat_second(user_id)
+                            await dp.bot.send_message(chat_id=cfg.channel_messages, text=channel_message_text)
                     elif message.photo:
                         if message.caption:
                             await dp.bot.send_photo(chat_id=user_second, photo=message.photo[-1].file_id, caption=message.caption)

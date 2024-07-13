@@ -99,10 +99,10 @@ class Data:
             else:
                 return False
 
-    def create_chat_all(self, id, user_first, user_second, search_gender_first, search_gender_second):
+    def create_chat_all(self, id, user_first, user_second, search_gender_first, search_gender_second, un_id):
         with self.connect:
             if user_first != 0:
-                self.cursor.execute("INSERT INTO chats(id, user_first, user_second, search_gender_first, search_gender_second) VALUES(%s, %s, %s, %s, %s)", (id, user_first, user_second, search_gender_first, search_gender_second,))
+                self.cursor.execute("INSERT INTO chats(id, user_first, user_second, search_gender_first, search_gender_second, un_id) VALUES(%s, %s, %s, %s, %s, %s)", (id, user_first, user_second, search_gender_first, search_gender_second, un_id,))
                 self.connect.commit()
                 return True
             else:
