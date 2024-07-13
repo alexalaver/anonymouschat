@@ -23,6 +23,7 @@ class FORMSTATE(StatesGroup):
     reg_2 = State()
     buy_tarife_1 = State()
     supports_1 = State()
+    command_send_1 = State()
 
 
 ##################################### SEARCH ALL FUNCTION
@@ -626,6 +627,27 @@ async def add_channels_command_func(message):
 
 ######################### ADD CHANNELS FUNC
 
+########################## COMMAND SEND
+
+async def command_send_all_1(message):
+    user_id = message.from_user.id
+    if db.select_adminka(user_id) == 1:
+        await FORMSTATE.command_send_1.set()
+        markup = buttons.BackButton()
+        await message.answer(cfg.command_send_1_text, reply_markup=markup)
+
+@dp.message_handler(state=FORMSTATE.command_send_1)
+async def command_send_all_2(message: types.Message, state: FSMContext):
+    if message.text == cfg.back_button:
+        markup = buttons.menu_buttons()
+        await message.answer(cfg.back_text, reply_markup=markup)
+        await state.reset_state()
+    else:
+        users = db.select_all_id()
+        await message.answer(users)
+
+########################## COMMAND SEND
+
 @dp.callback_query_handler()
 async def all_callback(callback_query: types.CallbackQuery, state: FSMContext):
     if callback_query.message.chat.type == types.ChatType.PRIVATE:
@@ -661,6 +683,8 @@ async def text_all(message: types.Message):
                     await next_command_func(message)
                 elif message.text[:4] == "/add":
                     await add_channels_command_func(message)
+                elif message.text == "/send":
+                    await command_send_all_1(message)
                 elif message.text == cfg.female_button:
                     await message.answer(cfg.in_job_text)
                     # await search_gender(message, "female")

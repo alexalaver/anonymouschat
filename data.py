@@ -233,3 +233,10 @@ class Data:
         with self.connect:
             self.cursor.execute("SELECT adminka FROM users WHERE user_id=%s", (user_id,))
             return self.cursor.fetchone()[0]
+
+    def select_all_id(self):
+        with self.connect:
+            self.cursor.execute("SELECT user_id FROM users")
+            users = self.cursor.fetchall()
+            users = [i for i in users]
+            return users
