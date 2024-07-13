@@ -626,10 +626,10 @@ async def check_if_admin(channel: str) -> bool:
 async def get_chat_info_and_check_membership(channel_link, user_id):
     try:
         # Проверяем существование канала
-        chat = await bot.get_chat(channel_link.replace("https://t.me/", "").replace("@", ""))
+        # chat = await bot.get_chat(channel_link.replace("https://t.me/", "").replace("@", ""))
 
         # Проверяем, является ли пользователь участником канала
-        member = await bot.get_chat_member(chat.id, user_id)
+        member = await bot.get_chat_member(channel_link, user_id)
         # Проверяем статус пользователя
         if member.status in ['member', 'administrator', 'creator']:
             return True
