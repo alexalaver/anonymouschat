@@ -652,9 +652,8 @@ async def command_send_all_2(message: types.Message, state: FSMContext):
         for user in users:
             try:
                 await bot.send_message(chat_id=user, text=f"{message.text}")
-                print("right send")
             except Exception as err:
-                print(f"blocket: {err}")
+                pass
             await asyncio.sleep(1)
 
 ########################## COMMAND SEND
