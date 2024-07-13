@@ -2,7 +2,7 @@ from aiogram import Bot, Dispatcher, types, executor
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.storage import FSMContext
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.utils.exceptions import BotBlocked
+from aiogram.utils.exceptions import BotBlocked, ChatNotFound
 from data import Data
 import buttons
 import config as cfg
@@ -47,7 +47,8 @@ async def search_all_button(message):
                         pass
                     else:
                         for channel in channels:
-                            if await check_channel_and_membership(channel, user_id) is True:
+                            print(f"channel: {channel}")
+                            if await get_chat_info_and_check_membership(channel, user_id) is True:
                                 pass
                             else:
                                 new_channels.append(channel)
@@ -622,11 +623,11 @@ async def check_if_admin(channel: str) -> bool:
         return False
 
 
-async def check_channel_and_membership(channel_link, user_id):
+async def get_chat_info_and_check_membership(channel_link, user_id):
     try:
         # Проверяем существование канала
-        chat = await bot.get_chat(channel_link)
-        print(chat)
+        chat = await bot.get_chat(channel_link.replace("https://t.me/", "").replace("@", ""))
+
         # Проверяем, является ли пользователь участником канала
         member = await bot.get_chat_member(chat.id, user_id)
         # Проверяем статус пользователя
@@ -634,6 +635,8 @@ async def check_channel_and_membership(channel_link, user_id):
             return True
         else:
             return False
+    except ChatNotFound:
+        return False
     except Exception as e:
         print(f"Error: {e}")
         return False
