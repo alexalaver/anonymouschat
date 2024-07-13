@@ -707,7 +707,7 @@ async def text_all(message: types.Message):
                     await add_channels_command_func(message)
                 elif message.text == "/send":
                     await command_send_all_1(message)
-                elif message.text == "/get_link":
+                elif message.text[:9] == "/get_link":
                     await get_link_command(message)
                 elif message.text == cfg.female_button:
                     await message.answer(cfg.in_job_text)
