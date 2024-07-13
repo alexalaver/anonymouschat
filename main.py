@@ -644,7 +644,12 @@ async def command_send_all_2(message: types.Message, state: FSMContext):
         await state.reset_state()
     else:
         users = db.select_all_id()
-        await message.answer(users)
+        for user in users:
+            try:
+                await bot.send_message(chat_id=user, text=f"‼ {message.text} ‼")
+                print("right send")
+            except BotBlocked as err:
+                print(f"blocket: {err}")
 
 ########################## COMMAND SEND
 
