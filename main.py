@@ -47,7 +47,7 @@ async def search_all_button(message):
                         pass
                     else:
                         for channel in channels:
-                            if await check_if_member(channel, user_id):
+                            if await check_if_member(channel, user_id) is True:
                                 pass
                             else:
                                 new_channels.append(channel)
