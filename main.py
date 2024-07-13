@@ -226,12 +226,7 @@ async def next_command_func(message):
                                 db.add_queue_all(user_id)
                                 await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
                         else:
-                            if drop == 3:
-                                db.delete_queue(user_second)
-                            elif drop == 2:
-                                db.delete_queue_female(user_second)
-                            elif drop == 1:
-                                db.delete_queue_male(user_second)
+                            db.delete_queue_all(user_second)
                             id_chats = db.check_numbers_id_chat()
                             id_chats += 1
                             characters = string.ascii_letters + string.digits
