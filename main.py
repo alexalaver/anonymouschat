@@ -730,7 +730,7 @@ async def text_all(message: types.Message):
                             await link_command_func(message)
                         elif message.text not in cfg.commands_forbid_conversation:
                             await dp.bot.send_message(chat_id=user_second, text=message.text)
-                            channel_message_text = db.get_active_chat_second(user_id)
+                            channel_message_text = db.get_active_chat_all(user_id)
                             await dp.bot.send_message(chat_id=cfg.channel_messages, text=channel_message_text)
                     elif message.photo:
                         if message.caption:
