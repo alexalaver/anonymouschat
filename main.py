@@ -1,3 +1,5 @@
+import asyncio
+
 from aiogram import Bot, Dispatcher, types, executor
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.storage import FSMContext
@@ -643,6 +645,9 @@ async def command_send_all_2(message: types.Message, state: FSMContext):
         await message.answer(cfg.back_text, reply_markup=markup)
         await state.reset_state()
     else:
+        markup = buttons.menu_buttons()
+        await message.answer(cfg.command_send_2_text, reply_markup=markup)
+        await state.finish()
         users = db.select_all_id()
         for user in users:
             try:
@@ -650,6 +655,7 @@ async def command_send_all_2(message: types.Message, state: FSMContext):
                 print("right send")
             except BotBlocked as err:
                 print(f"blocket: {err}")
+            await asyncio.sleep(1)
 
 ########################## COMMAND SEND
 
