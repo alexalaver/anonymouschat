@@ -1,2 +1,2 @@
-a = "/add asddsasda"
-print (a[:3])
+a = "https://t.me/asdasdsa"
+print (a.replace("https://t.me/", "").replace("@", ""))

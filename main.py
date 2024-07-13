@@ -594,7 +594,7 @@ async def reg_2_text(message: types.Message):
 
 ######################### ADD CHANNELS FUNC
 
-async def get_chat_info(channel: str):
+async def get_chat_info(channel):
     try:
         channel_name = channel.replace("https://t.me/", "").replace("@", "")
         print(f"channel_name: {channel_name}")
@@ -622,11 +622,11 @@ async def check_if_admin(channel: str) -> bool:
         return False
 
 
-async def check_channel_and_membership(channel_link: str, user_id: int) -> bool:
+async def check_channel_and_membership(channel_link, user_id):
     try:
         # Проверяем существование канала
         chat = await bot.get_chat(channel_link)
-
+        print(chat)
         # Проверяем, является ли пользователь участником канала
         member = await bot.get_chat_member(chat.id, user_id)
         # Проверяем статус пользователя
