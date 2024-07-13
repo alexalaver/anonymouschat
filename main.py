@@ -11,7 +11,8 @@ import logging
 import datetime
 import other_functions as fnc
 import re
-import uuid
+import random
+import string
 
 bot = Bot(token=cfg.BOT_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
@@ -85,7 +86,8 @@ async def search_all_button(message):
                                     search_gender_second = "male"
                                 id_chats = db.check_numbers_id_chat()
                                 id_chats += 1
-                                random_id = uuid.uuid4()
+                                characters = string.ascii_letters + string.digits
+                                random_id = ''.join(random.choice(characters) for _ in range(16))
                                 db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second, random_id)
                                 await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                                 await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
@@ -232,7 +234,8 @@ async def next_command_func(message):
                                 db.delete_queue_male(user_second)
                             id_chats = db.check_numbers_id_chat()
                             id_chats += 1
-                            random_id = uuid.uuid4()
+                            characters = string.ascii_letters + string.digits
+                            random_id = ''.join(random.choice(characters) for _ in range(16))
                             db.create_chat_all(id_chats, user_id, user_second, gender, gender_second, random_id)
                             await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                             await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
@@ -271,7 +274,8 @@ async def next_command_func(message):
                                 print('right 4')
                                 id_chats = db.check_numbers_id_chat()
                                 id_chats += 1
-                                random_id = uuid.uuid4()
+                                characters = string.ascii_letters + string.digits
+                                random_id = ''.join(random.choice(characters) for _ in range(16))
                                 db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second, random_id)
                                 await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                                 await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
@@ -369,7 +373,8 @@ async def search_gender(message, gender):
                                     db.delete_queue_male(user_second)
                                 id_chats = db.check_numbers_id_chat()
                                 id_chats += 1
-                                random_id = uuid.uuid4()
+                                characters = string.ascii_letters + string.digits
+                                random_id = ''.join(random.choice(characters) for _ in range(16))
                                 db.create_chat_all(id_chats, user_id, user_second, gender, gender_second, random_id)
                                 await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
                                 await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
