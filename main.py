@@ -47,7 +47,6 @@ async def search_all_button(message):
                         pass
                     else:
                         for channel in channels:
-                            print(f"channel: {channel}")
                             if await get_chat_info_and_check_membership(channel, user_id) is True:
                                 pass
                             elif await get_chat_info_and_check_membership(channel, user_id) is False:
@@ -90,11 +89,8 @@ async def search_all_button(message):
                                 db.delete_chats(user_id)
                                 await message.answer(cfg.message_send_blocked_error)
                     else:
-                        not_sub_text = cfg.not_subscribe_channels
-                        for chan in new_channels:
-                            not_sub_text = not_sub_text + "\n\n" + chan
                         markup = buttons.MarkupsLink(new_channels)
-                        await message.answer(not_sub_text, reply_markup=markup)
+                        await message.answer(cfg.not_subscribe_channels, reply_markup=markup)
 
 
 ##################################### SEARCH ALL FUNCTION
