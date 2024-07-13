@@ -625,7 +625,8 @@ async def check_if_member(channel, user_id):
     try:
         status = ["creator", "administrator", "member"]
         for i in status:
-            if i == bot.get_chat_member(chat_id=channel, user_id=user_id).status:
+            chat = await bot.get_chat(channel)
+            if i == bot.get_chat_member(chat_id=chat.id, user_id=user_id).status:
                 return True
             else:
                 return False
