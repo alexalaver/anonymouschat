@@ -134,3 +134,5 @@ add_channels_correct_text = "✔ Դուք հաջողությամբ ալիք եք
 add_channels_incorrect_text = "❌ format /add 'link channel'"
 
 in_job_text = "💤 Այս ֆունկցիան մշակման փուլում է:"
+
+channel_range = "Ալիք 📺"

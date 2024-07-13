@@ -93,8 +93,8 @@ async def search_all_button(message):
                         not_sub_text = cfg.not_subscribe_channels
                         for chan in new_channels:
                             not_sub_text = not_sub_text + "\n\n" + chan
-                        markup_start = buttons.menu_buttons()
-                        await message.answer(not_sub_text, reply_markup=markup_start)
+                        markup = buttons.MarkupsLink(new_channels)
+                        await message.answer(not_sub_text, reply_markup=markup)
 
 
 ##################################### SEARCH ALL FUNCTION

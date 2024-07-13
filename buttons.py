@@ -64,3 +64,9 @@ def HelperButton():
         InlineKeyboardButton(text="Սեղմեք", url=cfg.helper_link)
     )
     return markup
+
+def MarkupsLink(channels):
+    markup = InlineKeyboardMarkup(row_width=1)
+    for channel, i in channels, range(len(channels) + 1):
+        markup.add(InlineKeyboardButton(text=f"{i} {cfg.channel_range}", url=channel))
+    return markup
