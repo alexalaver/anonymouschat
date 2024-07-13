@@ -666,7 +666,7 @@ async def get_link_command(message):
     if adminka == 1:
         message_text = message.text.split()
         if len(message_text) == 2:
-            await message.answer(text=fnc.nick_with_link(cfg.link_user_text, message_text[1]))
+            await message.answer(text=f"{cfg.link_user_text} - {fnc.nick_with_link("LINK", message_text[1])}", parse_mode=types.ParseMode.MARKDOWN)
 
 ############################# GET LINK COMMAND
 
