@@ -38,63 +38,62 @@ async def search_all_button(message):
             if db.check_queue(user_id) or db.check_queue_male(user_id) or db.check_queue_female(user_id):
                 await message.answer(cfg.search_two_text)
             else:
-                # if db.get_active_chat(user_id):
-                #     await message.answer(cfg.have_companion_error)
-                # else:
-                #     channels = db.select_channels()
-                #     new_channels = []
-                #     if channels is None:
-                #         pass
-                #     else:
-                #         for channel in channels:
-                #             if await check_if_admin(channel):
-                #                 if await check_if_member(channel, user_id):
-                #                     pass
-                #                 else:
-                #                     new_channels.append(channel)
-                #     if new_channels == []:
-                    user_second = False
-                    drop = None
-                    gender_user = db.select_gender_users(user_id)
-                    if gender_user == "male":
-                        user_second = db.get_user_queue_male()
-                        drop = 1
-                    elif gender_user == "female":
-                        user_second = db.get_user_queue_female()
-                        drop = 2
-                    if user_second == False:
-                        user_second = db.get_user_queue()
-                        drop = 3
-                    cancel_button = buttons.CancelButton()
-                    if user_second == False:
-                        db.add_queue_all(user_id)
-                        await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
+                if db.get_active_chat(user_id):
+                    await message.answer(cfg.have_companion_error)
+                else:
+                    channels = db.select_channels()
+                    new_channels = []
+                    if channels is None:
+                        pass
                     else:
-                        try:
-                            search_gender_first = None
-                            search_gender_second = None
-                            if drop == 3:
-                                db.delete_queue(user_second)
-                            elif drop == 2:
-                                db.delete_queue_female(user_second)
-                                search_gender_second = "female"
-                            elif drop == 1:
-                                db.delete_queue_male(user_second)
-                                search_gender_second = "male"
-                            id_chats = db.check_numbers_id_chat()
-                            id_chats += 1
-                            db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second)
-                            await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                            await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
-                        except BotBlocked:
-                            db.delete_chats(user_id)
-                            await message.answer(cfg.message_send_blocked_error)
-                    # else:
-                    #     not_sub_text = cfg.not_subscribe_channels
-                    #     for chan in new_channels:
-                    #         not_sub_text = not_sub_text + "\n\n" + chan
-                    #     markup_start = buttons.menu_buttons()
-                    #     await message.answer(not_sub_text, reply_markup=markup_start)
+                        for channel in channels:
+                            if await check_if_member(channel, user_id):
+                                pass
+                            else:
+                                new_channels.append(channel)
+                    if new_channels == []:
+                        user_second = False
+                        drop = None
+                        gender_user = db.select_gender_users(user_id)
+                        if gender_user == "male":
+                            user_second = db.get_user_queue_male()
+                            drop = 1
+                        elif gender_user == "female":
+                            user_second = db.get_user_queue_female()
+                            drop = 2
+                        if user_second == False:
+                            user_second = db.get_user_queue()
+                            drop = 3
+                        cancel_button = buttons.CancelButton()
+                        if user_second == False:
+                            db.add_queue_all(user_id)
+                            await message.answer(cfg.queue_wait_text, reply_markup=cancel_button)
+                        else:
+                            try:
+                                search_gender_first = None
+                                search_gender_second = None
+                                if drop == 3:
+                                    db.delete_queue(user_second)
+                                elif drop == 2:
+                                    db.delete_queue_female(user_second)
+                                    search_gender_second = "female"
+                                elif drop == 1:
+                                    db.delete_queue_male(user_second)
+                                    search_gender_second = "male"
+                                id_chats = db.check_numbers_id_chat()
+                                id_chats += 1
+                                db.create_chat_all(id_chats, user_id, user_second, search_gender_first, search_gender_second)
+                                await dp.bot.send_message(chat_id=user_second, text=cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                                await message.answer(cfg.companion_right_text, reply_markup=types.ReplyKeyboardRemove(), parse_mode=types.ParseMode.MARKDOWN)
+                            except BotBlocked:
+                                db.delete_chats(user_id)
+                                await message.answer(cfg.message_send_blocked_error)
+                    else:
+                        not_sub_text = cfg.not_subscribe_channels
+                        for chan in new_channels:
+                            not_sub_text = not_sub_text + "\n\n" + chan
+                        markup_start = buttons.menu_buttons()
+                        await message.answer(not_sub_text, reply_markup=markup_start)
 
 
 ##################################### SEARCH ALL FUNCTION
@@ -622,13 +621,14 @@ async def check_if_admin(channel: str) -> bool:
         logging.error(f"Error checking admin status in {channel}: {e}")
         return False
 
-async def check_if_member(channel: str, user_id: int) -> bool:
+async def check_if_member(channel, user_id):
     try:
-        chat = await get_chat_info(channel)
-        if chat:
-            member = await bot.get_chat_member(chat.id, user_id)
-            return member.status != types.ChatMemberStatus.LEFT
-        return False
+        status = ["creator", "administrator", "member"]
+        for i in status:
+            if i == bot.get_chat_member(chat_id=channel, user_id=user_id).status:
+                return True
+            else:
+                return False
     except Exception as e:
         logging.error(f"Error checking membership status in {channel} for user {user_id}: {e}")
         return False
