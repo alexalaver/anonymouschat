@@ -664,7 +664,7 @@ async def get_link_command(message):
     user_id = message.from_user.id
     adminka = db.select_adminka(user_id)
     if adminka == 1:
-        message_text = message.text.sleep("")
+        message_text = message.text.split()
         if len(message_text) == 2:
             await message.answer(text=fnc.nick_with_link(cfg.link_user_text, message_text[1]))
 
