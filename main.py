@@ -698,9 +698,11 @@ async def text_all(message: types.Message):
                 elif message.text[:4] == "/add":
                     await add_channels_command_func(message)
                 elif message.text == cfg.female_button:
-                    await search_gender(message, "female")
+                    await message.answer(cfg.in_job_text)
+                    # await search_gender(message, "female")
                 elif message.text == cfg.male_button:
-                    await search_gender(message, "male")
+                    await message.answer(cfg.in_job_text)
+                    # await search_gender(message, "male")
                 elif message.text == cfg.supports_button:
                     await supports_button_func(message)
                 elif message.text in cfg.have_not_command:

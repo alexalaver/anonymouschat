@@ -132,3 +132,5 @@ helper_link = "https://t.me/HelperAnonArm"
 
 add_channels_correct_text = "✔ Դուք հաջողությամբ ալիք եք ավելացրել:"
 add_channels_incorrect_text = "❌ format /add 'link channel'"
+
+in_job_text = "💤 Այս ֆունկցիան մշակման փուլում է:"
