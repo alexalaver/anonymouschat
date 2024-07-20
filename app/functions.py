@@ -543,7 +543,8 @@ async def all_callback(callback_query: types.CallbackQuery):
             )
         elif callback_query.data == "back_from_vip":
             markup = buttons.BuyTarifeButton()
-            await callback_query.message.edit_text(cfg.tarife_not_text, reply_markup=markup)
+            await callback_query.message.delete()
+            await callback_query.message.answer(cfg.tarife_not_text, reply_markup=markup)
         else:
             await callback_query.message.delete()
             await callback_query.answer(cfg.cannot_use_button, show_alert=True)
