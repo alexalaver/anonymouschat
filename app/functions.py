@@ -343,7 +343,7 @@ async def search_gender_func(message: types.Message, state: FSMContext):
         elif message.text == "female" or cfg.female_button:
             gender = "female"
         user_id = message.from_user.id
-        await bot.send_message(chat_id=cfg.logs_group, text=f"{fnc.nick_with_link('USER', user_id)} ENTER {gender} BUTTON")
+        await bot.send_message(chat_id=cfg.logs_group, text=f"{fnc.nick_with_link('USER', user_id)} ENTER {gender} BUTTON", parse_mode=enums.ParseMode.MARKDOWN)
         if (not db.check_user(user_id)):
             markup = buttons.RegisterGender()
             await message.answer(cfg.select_gender_1_text, reply_markup=markup)
@@ -775,7 +775,7 @@ async def success_payment_handler(message: types.Message):
     formatted_time = time_plus_tarife_days.strftime("%Y-%m-%d %H:%M:%S")
     db.update_tarife(message.from_user.id, formatted_time)
     await bot.send_message(chat_id=message.from_user.id, text=cfg.CONFIRM_ORDERS_USER_TEXT(dram, tarife_day), parse_mode=enums.ParseMode.MARKDOWN)
-    await bot.send_message(chat_id=cfg.logs_group, text=f"{fnc.nick_with_link('USER', message.from_user.id)} CORRECT BUY VIP")
+    await bot.send_message(chat_id=cfg.logs_group, text=f"{fnc.nick_with_link('USER', message.from_user.id)} CORRECT BUY VIP", parse_mode=enums.ParseMode.MARKDOWN)
 
 ######################## DONATE FUNC
 
