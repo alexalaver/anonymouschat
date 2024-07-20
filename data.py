@@ -247,3 +247,4 @@ class Data:
             users = self.cursor.fetchall()
             users = [i[0] for i in users]
             return users
+

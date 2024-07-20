@@ -1,6 +1,8 @@
-BOT_TOKEN = "6316955575:AAECuppHspkO_rXyFbc8stscsVZdYHZcR-w"
+BOT_TOKEN = "6891045575:AAGk-IohsqKzTp0NDMR8EG9Yh9p24_KXFKg"
 
-search_all_button = "🔍 Փնտրել զրուցակից"
+start_text = "👋 Հարգելի օգտատեր, բարի գալուստ անանուն չատ։ Այստեղ դուք կարող եք շփվել տարբեր մարդկանց հետ, և ամեն ինչ անանուն կլինի։\n\n⚡Սեղմեք /search"
+
+search_all_button_1 = "🔍 Փնտրել զրուցակից"
 supports_button = "💬 Կապ մեզ հետ"
 female_button = "🙍🏼‍♀️ Աղջիկ զրուցակից"
 male_button = "🙍🏼‍♂️ Տղա զրուցակից"
@@ -8,14 +10,15 @@ cancel_button = "🚫 Չեղարկել"
 back_button = "Վերադառնալ"
 
 tarife_group_tag = "@AnonChatARMTarife"
-supports_group_tag = "@AnonChatARMSupport"
 
-commands_forbid_conversation = [search_all_button, supports_button, female_button, male_button, cancel_button, "/start", "/search"]
-commands_forbid_search = [search_all_button, supports_button, female_button, male_button, "/start", "/search", "/next", "/link"]
+logs_group = -1002145063854
+
+commands_forbid_conversation = [search_all_button_1, supports_button, female_button, male_button, cancel_button, "/start", "/search"]
+commands_forbid_search = [search_all_button_1, supports_button, female_button, male_button, "/start", "/search", "/next", "/link"]
 have_not_command = [supports_button]
 
 select_gender_1_text = "1. Սկսելու համար ընտրեք ձեր սեռը:"
-select_gender_2_text = "2. Այժմ ընտրեք ձեր տարիքային միջակայքը:"
+select_gender_2_text = "2. Ընտրեք ձեր տարիքային միջակայքը:"
 
 select_male_button = "🙍🏼‍♂️ Տղա"
 select_female_button = "🙍🏼‍♀️ Աղջիկ"
@@ -25,11 +28,15 @@ age_18_29 = "🔢 18-29"
 age_30_49 = "🔢 30-49"
 age_50_90 = "🔢 50-90"
 
-register_right = "Շնորհավորում ենք, այժմ կարող եք զրույց սկսել պատահական մարդու հետ:"
+register_right = "🧸 Շնորհավորում ենք, այժմ կարող եք զրույց սկսել պատահական մարդու հետ:\n\n⚡Սեղմեք /search"
 
 cannot_use_button = "💤 Դուք չեք կարող օգտագործել այս կոճակը:"
 
 search_two_text = "💤 Դուք արդեն որոնման գործընթացում եք:"
+
+link_in_search = "💤 Այս հրամանը կարող եք օգտագործել միայն ձեր զրուցակցի հետ շփվելիս:"
+
+error_search = "💤 Դուք չեք կարող օգտագործել այս հրամանը որոնման ընթացքում:"
 
 have_companion_error = "💤 Դուք արդեն ունեք զրուցակից:"
 
@@ -53,15 +60,15 @@ error_commands = "💤 Դուք չեք կարող օգտագործել այս հ
 have_not_commands_text = "💤 Այս հրամանը դեռ հասանելի չէ:"
 command_not_error = "💤 Այս հրամանը գոյություն չունի: Գրեք /start հրամանը:"
 
-tarife_endend_text = "👋🏻 Հարգելի օգտատեր, ձեր սակագինը սպառվել է: Այս ֆունկցիան բացելու համար անհրաժեշտ է նորից սակագին գնել:\n\n💳 Գնելով սակագին` ձեզ համար գովազդ չի լինի, կբացվի նաև որոնման ֆունկցիան ըստ սեռի։\n\n👉🏻 Ընտրեք համապատասխան տարբերակը:"
-tarife_not_text = "👋🏻 Հարգելի օգտատեր, այս ֆունկցիան բացելու համար անհրաժեշտ է սակագին գնել:\n\n💳 Գնելով սակագին` ձեզ համար գովազդ չի լինի, կբացվի նաև որոնման ֆունկցիան ըստ սեռի։\n\n👉🏻 Ընտրեք համապատասխան տարբերակը:"
-one_day_tarife_button = "1 օր/1500֏"
-one_week_tarife_button = "1 շաբաթ/4500֏"
-one_month_tarife_button = "1 ամիս/9500֏"
-one_year_tarife_button = "1 տարի/25000֏"
-forever_tarife_button = "Ընդմիշտ/45000֏"
+tarife_endend_text = "💎 Հարգելի օգտատեր, ձեր VIP-ը սպառվել է: Այս ֆունկցիան բացելու համար անհրաժեշտ է նորից VIP գնել:\n\n💳 Գնելով VIP` ձեզ համար գովազդ չի լինի, կբացվի նաև որոնման ֆունկցիան ըստ սեռի։\n\n👉🏻 Ընտրեք համապատասխան տարբերակը:"
+tarife_not_text = "💎 Հարգելի օգտատեր, այս ֆունկցիան բացելու համար անհրաժեշտ է VIP գնել:\n\n💳 Գնելով VIP` ձեզ համար գովազդ չի լինի, կբացվի նաև որոնման ֆունկցիան ըստ սեռի։\n\n👉🏻 Ընտրեք համապատասխան տարբերակը:"
+one_day_tarife_button = "💎 VIP 1 օր"
+one_week_tarife_button = "💎 VIP 1 շաբաթ"
+one_month_tarife_button = "💎 VIP 1 ամիս"
+one_year_tarife_button = "💎 VIP 1 տարի"
+forever_tarife_button = "💎 VIP Ընդմիշտ"
 all_tarife_buttons = [one_day_tarife_button, one_week_tarife_button, one_month_tarife_button, one_year_tarife_button, forever_tarife_button]
-tarife_have_error = "💤 Հարգելի օգտատեր, դուք արդեն ունեք սակագին:"
+tarife_have_error = "💤 Հարգելի օգտատեր, դուք արդեն ունեք VIP:"
 
 def tarife_but_text(sum, day):
     if day == "Ընդմիշտ":
@@ -88,9 +95,9 @@ def CONFIRM_USER_ORDER(user, day, sum):
 
 def CONFIRM_ORDERS_USER_TEXT(sum, day):
     if day == "Ընդմիշտ":
-        return f"Հարգելի օգտատեր, Ձեր Ընդմիշտ սակագինը {sum} դրամով հաջողությամբ հաստատվել է։ Այժմ որոնման գործառույթն ըստ սեռի հասանելի է ձեզ, և ձեզ համար գովազդ չի լինի:"
+        return f"Հարգելի օգտատեր, Ձեր Ընդմիշտ 💎 VIP-ը {sum} դրամով հաջողությամբ հաստատվել է։ Այժմ որոնման գործառույթն ըստ սեռի հասանելի է ձեզ, և ձեզ համար գովազդ չի լինի: ⭐"
     else:
-        return f"Հարգելի օգտատեր, Ձեր {day}վա սակագինը {sum} դրամով հաջողությամբ հաստատվել է։ Այժմ որոնման գործառույթն ըստ սեռի հասանելի է ձեզ, և ձեզ համար գովազդ չի լինի:"
+        return f"Հարգելի օգտատեր, Ձեր {day} օրվա 💎 VIP-ը {sum} դրամով հաջողությամբ հաստատվել է։ Այժմ որոնման գործառույթն ըստ սեռի հասանելի է ձեզ, և ձեզ համար գովազդ չի լինի: ⭐"
 
 check_screen_error_text = "💤 Դուք պետք է ուղարկեք չեկի սքրինշոթը:"
 check_screen_right_text = "👉🏻 Հարգելի օգտատեր, մենք ստացել ենք Ձեր ուղարկած սքրինշոթը, խնդրում ենք սպասել մոդերատորների ստուգման:"
@@ -123,10 +130,10 @@ send_message_user_support_error = "📮 Այս օգտվողն ավարտել է 
 
 shablon_send_command = "<< /send id TEXT >>"
 
-send_your_link_text_1 = "Դուք հաջողությամբ ուղարկեցիք ձեր պրոֆիլի հղումը ձեր զրուցակցին: ✔"
+send_your_link_text_1 = "Դուք հաջողությամբ ուղարկեցիք ձեր պրոֆիլի հղումը ձեր զրուցակցին: 🟢"
 
 def send_your_link_text_2(link):
-    return f"{link} հղում է ուղարկել իր տելեգրամ ակկաունտի։"
+    return f"{link} հղում է ուղարկել իր տելեգրամ ակկաունտի։ ✉"
 
 helper_link = "https://t.me/HelperAnonArm"
 
@@ -140,7 +147,23 @@ channel_range = "Ալիք 📺"
 stop_conversation_text_error = "💤 Զրույցն ավարտված է։"
 
 command_send_1_text = "🪧 Հարգելի ադմինիստրատոր, գրեք այն տեքստը, որը ցանկանում եք ուղարկել բոլոր օգտատերերին: 🪧"
-command_send_2_text = "✅ Հաղորդագրությունները հաջողությամբ ուղարկվեցին: ✅"
+def command_send_2_text(user_send):
+    return f"Հաղորդագրությունները հաջողությամբ ուղարկվեցին {user_send} օգտվողներին: 📩"
 
 channel_messages = "-1002239265165"
 link_user_text = "💤 Օգտագործողի հղումը"
+
+error_tag_text = "💤 Ձեր տելեգրամ պրոֆիլի հղում ուղարկելու համար գրեք /link հրամանը"
+
+channels_text = "💤 Բոլոր ալիքները:\n"
+channels_not_Text = "💤 Այս պահին ալիքներ չկան։"
+correct_delete_text = "💤 Դուք հաջողությամբ հեռացրեցիք ալիքը ցանկից:"
+error_delete_text = "💤 Հրամանի ձևը - /delete num"
+def vip_descreption():
+    return f"❗️Վճարումը կիրականացվի Telegram Stars-ի միջոցով։ Սա Telegram-ի ներքին արժույթն է, որի միջոցով կարող եք ծառայություններ գնել Telegram բոտերում։"
+
+def USER_LOGS_BUTTON(user, com):
+    return f"{user} սեղմեց կոճակը - {com}"
+
+def USER_LOGS_COM(user, com):
+    return f"{user} գրել է հրամանը. - {com}"
