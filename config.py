@@ -1,4 +1,4 @@
-BOT_TOKEN = "6891045575:AAGk-IohsqKzTp0NDMR8EG9Yh9p24_KXFKg"
+BOT_TOKEN = "6316955575:AAECuppHspkO_rXyFbc8stscsVZdYHZcR-w"
 
 start_text = "👋 Հարգելի օգտատեր, բարի գալուստ անանուն չատ։ Այստեղ դուք կարող եք շփվել տարբեր մարդկանց հետ, և ամեն ինչ անանուն կլինի։\n\n⚡Սեղմեք /search"
 
