@@ -338,9 +338,9 @@ async def next_command_func(message: types.Message, state: FSMContext):
 async def search_gender_func(message: types.Message, state: FSMContext):
     if message.chat.type == enums.ChatType.PRIVATE:
         gender = None
-        if message.text == "male" or cfg.male_button:
+        if message.text == "male" or message.text == cfg.male_button:
             gender = "male"
-        elif message.text == "female" or cfg.female_button:
+        elif message.text == "female" or message.text == cfg.female_button:
             gender = "female"
         user_id = message.from_user.id
         await bot.send_message(chat_id=cfg.logs_group, text=f"{fnc.nick_with_link('USER', user_id)} ENTER {gender} BUTTON", parse_mode=enums.ParseMode.MARKDOWN)
