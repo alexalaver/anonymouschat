@@ -21,7 +21,7 @@ class FORMSTATE(StatesGroup):
     supports_1 = State()
     command_send_1 = State()
 
-db = Data("localhost", "5432", "anonymouschat", "alex", "alexpass")
+db = Data("localhost", "5432", "anonbas", "postgres", "alexman014")
 
 
 ##################################### SEARCH ALL FUNCTION
