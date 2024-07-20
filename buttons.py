@@ -7,8 +7,7 @@ def menu_buttons():
         [KeyboardButton(text=cfg.male_button), KeyboardButton(text=cfg.female_button)],
         [KeyboardButton(text=cfg.supports_button)]
     ],
-            resize_keyboard=True,
-            input_field_placeholder="пиши")
+            resize_keyboard=True)
     return markup
 
 def RegisterGender():
