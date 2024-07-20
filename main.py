@@ -45,4 +45,4 @@ if __name__ == "__main__":
     try:
         asyncio.run(start())
     except KeyboardInterrupt:
-        logger.exception("Error while running the bot")
+        print("Exit")
