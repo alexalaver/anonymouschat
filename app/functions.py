@@ -152,7 +152,11 @@ async def reg_2_callback(callback_query: types.CallbackQuery, state: FSMContext)
         age = "30-49"
     elif callback_query.data == "age_50_90":
         age = "50-90"
-    db.add_user(id, user_id, first_name.encode('utf-8'), username.encode('utf-8'), gender, age)
+    if username is None:
+        pass
+    else:
+        username = username.encode('utf-8')
+    db.add_user(id, user_id, first_name.encode('utf-8'), username, gender, age)
     markup = buttons.menu_buttons()
     await callback_query.message.delete()
     await callback_query.message.answer(cfg.register_right, reply_markup=markup)
